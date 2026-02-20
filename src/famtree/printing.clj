@@ -1,0 +1,43 @@
+(ns famtree.printing 
+  (:require [famtree.records :as recs]))
+
+;; Print helpers for displaying records
+
+(defn- show-stats
+  "Print out details of info referenced by data-symbol"
+  [data-symbol]
+  (let [data (var-get data-symbol)]
+    (println data-symbol (count data) "records")))
+
+(defn print-record-summary
+  "Prints out counts of the loaded records"
+  []
+  (show-stats #'recs/births)
+  (show-stats #'recs/deaths)
+  (show-stats #'recs/marriages)
+  (show-stats #'recs/census))
+
+;; General display of records
+    
+(defn print-grouped-data
+  "Print out grouped data
+    Grouping is printed first, then records in that grouping line-by-line"
+  [grouped-data]
+  (doseq [[grouping-key coll] grouped-data]
+    (println "==" grouping-key "==")
+      (doseq [data-row coll]
+        (println "  " data-row))))
+
+(defn print-records
+  "Prints out records, one per-line"
+  [records]
+  (doseq [record records]
+    (println record)))
+
+;; Specific for fields
+
+(defn print-grouped-by-year
+  "Prints a collection of records (likely census records), grouped by year
+    with headings for each year, then each record on a line"
+  [records]
+  (print-grouped-data (group-by :year records)))
