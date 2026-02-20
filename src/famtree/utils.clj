@@ -21,3 +21,10 @@
     (if (= type1 :census) ; Census is only type one person can show up in multiple times
       [type1 (rand-nth type-list)]
       [type1 (rand-nth (vec (disj recs/all-types type1)))])))
+      
+(defn if-1-only
+  "Return the element in coll if there is only one"
+  [coll]
+  (if (= 1 (count coll))
+    (first coll)))
+    

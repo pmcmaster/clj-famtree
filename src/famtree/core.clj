@@ -1,6 +1,5 @@
 (ns famtree.core
   (:require [famtree.records :as recs]
-            [famtree.query :as query]
             [famtree.printing :as prt]
             [famtree.utils :as utils]
             [famtree.match :as match])

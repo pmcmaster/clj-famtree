@@ -1,32 +1,35 @@
 (ns famtree.match
   (:require [famtree.fields :as fields]
-            [famtree.records :as recs]))
+            [famtree.records :as recs]
+            [famtree.utils :as utils]))
 
 (defn- match-death-to-birth-get-1
   [death-record]
   (let [est-birth-year (fields/est-birth-from-death-rec death-record)
         death-gender (:gender death-record)
         death-fname (fields/first-forename-from-rec death-record)
+        death-mmn (:mm-name death-record)
         matching-birth-recs (->>
                             recs/births
-                            (filter #(= est-birth-year (Integer/parseInt (:year %))))
+                            (filter #(= est-birth-year (:year %)))
                             (filter #(= death-gender (:gender %)))
-                            (filter #(= death-fname (fields/first-forename-from-rec %))))]
-      (if (= 1 (count matching-birth-recs))
-        (first matching-birth-recs))))
+                            (filter #(= death-fname (fields/first-forename-from-rec %)))
+                            (filter #(fields/=-and-has-data? death-mmn (:mm-name %))))]
+        (utils/if-1-only matching-birth-recs)))
 
 (defn- match-birth-to-death-get-1
   [birth-record]
-  (let [birth-year (Integer/parseInt (:year birth-record))
+  (let [birth-year (:year birth-record)
         birth-gender (:gender birth-record)
         birth-fname (fields/first-forename-from-rec birth-record)
+        birth-mmn (:mm-name birth-record)
         matching-death-recs (->>
                             recs/deaths
                             (filter #(= birth-year (fields/est-birth-from-death-rec %)))
                             (filter #(= birth-gender (:gender %)))
-                            (filter #(= birth-fname (fields/first-forename-from-rec %))))]
-      (if (= 1 (count matching-death-recs))
-        (first matching-death-recs))))
+                            (filter #(= birth-fname (fields/first-forename-from-rec %)))
+                            (filter #(fields/=-and-has-data? birth-mmn (:mm-name %))))]
+      (utils/if-1-only matching-death-recs)))
 
 ;; Matching by record type
 
