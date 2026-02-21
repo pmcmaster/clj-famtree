@@ -16,7 +16,8 @@
 (defn no-data?
   "Returns field-content if it matches empty field marker which is something like '-----'"
   [field-content]
-    (re-matches #"-+" field-content))
+  (if (string? field-content)
+    (re-matches #"-+" field-content)))
 
 (defn first-forename-from-rec
   "Get the first forename from a record {:forename 'Bob David' would return 'Bob'}"

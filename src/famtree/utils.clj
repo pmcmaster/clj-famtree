@@ -8,9 +8,9 @@
   [grouped-records]
   (map
     (fn [record]
-      (let [region-name (first record)
+      (let [grouping-key (first record)
             record-count (-> record second count)]
-        (vector region-name record-count)))
+        (vector grouping-key record-count)))
     grouped-records))
     
 (defn random-record-type-pair
