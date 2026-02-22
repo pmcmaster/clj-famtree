@@ -1,13 +1,48 @@
 (ns famtree.records
-  (:require [famtree.load :as load]))
+  (:require [famtree.load :as load]
+            [famtree.fields :as fields]
+            [famtree.consts :as consts]
+            [famtree.match-proto :as match-p]))
+
+(defrecord BirthRec [surname forename mm-name gender year rec-ref rd-name]
+  match-p/MatchableRecord
+  (est-birth-year-range [this]
+    [(:year this) (:year this)])
+  (match-on-gender [this other-gender] (= (:gender this) other-gender))
+  (match-on-mm-name [this other-mm-name] (= (:mm-name this) other-mm-name)))
+
+(defrecord DeathRec [surname forename age-at-death mm-name gender year rec-ref rd-name]
+  match-p/MatchableRecord
+  (est-birth-year-range [this]
+    (fields/est-birth-range-from-age (:age-at-death this) (:year this)))
+  (match-on-gender [this other-gender] (= (:gender this) other-gender))
+  (match-on-mm-name [this other-mm-name] (= (:mm-name this) other-mm-name)))
+
+(defrecord MarriageRec [surname forename spouse-surname spouse-forename year rec-ref rd-name]
+  match-p/MatchableRecord
+  (est-birth-year-range [this]
+    (let [marriage-year (:year this)]
+      [(- marriage-year (second consts/marriage-age-range))
+       (- marriage-year (first consts/marriage-age-range))]))
+  (match-on-gender [this other-gender] true) ;; TODO: Implement gender check for marriage recs
+  (match-on-mm-name [this other-mm-name] true))
+
+(defrecord CensusRec [surname forename year gender age-at-census rec-ref rd-name county-city]
+  match-p/MatchableRecord
+  (est-birth-year-range [this]
+    (fields/est-birth-range-from-age (:age-at-census this) (:year this)))
+  (match-on-gender [this other-gender] (= (:gender this) other-gender))
+  (match-on-mm-name [this other-mm-name] true))
+  
 
 ;; Main data collections
-      
-(def births (load/data-for-type "births"))
-(def deaths (load/data-for-type "deaths"))
-(def marriages (load/data-for-type "marriages"))
-(def census (load/data-for-type "census"))
 
+(def births (map map->BirthRec (load/data-for-type "births")))
+(def deaths (map map->DeathRec (load/data-for-type "deaths")))
+(def marriages (map map->MarriageRec (load/data-for-type "marriages")))
+(def census (map map->CensusRec (load/data-for-type "census")))
+
+;; TODO: Shouldn't need these (and same for the branching in matching.clj)
 (def all-types #{:births :deaths :marriages :census})
 
 (def by-keyword
@@ -16,5 +51,4 @@
      :marriages marriages
      :census census})
 
-(defrecord CensusRec [surname forename year gender age-at-census rec-ref re-name county-city])
 

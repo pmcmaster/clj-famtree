@@ -1,72 +1,108 @@
 (ns famtree.match
+  (:import [famtree.records BirthRec DeathRec MarriageRec CensusRec])
   (:require [famtree.fields :as fields]
+            [famtree.match-proto :as match-p]
             [famtree.records :as recs]
+            [famtree.consts :as consts]
             [famtree.utils :as utils]))
 
-(defn- match-death-to-birth-get-1
-  [death-record]
-  (let [est-birth-year (fields/est-birth-from-death-rec death-record)
-        death-gender (:gender death-record)
-        death-fname (fields/first-forename-from-rec death-record)
-        death-mmn (:mm-name death-record)
-        matching-birth-recs (->>
-                            recs/births
-                            (filter #(= est-birth-year (:year %)))
-                            (filter #(= death-gender (:gender %)))
-                            (filter #(= death-fname (fields/first-forename-from-rec %)))
-                            (filter #(fields/=-and-has-data? death-mmn (:mm-name %))))]
-        (utils/if-1-only matching-birth-recs)))
+; Matching funcs for each type of record
 
-(defn- match-birth-to-death-get-1
-  [birth-record]
-  (let [birth-year (:year birth-record)
-        birth-gender (:gender birth-record)
-        birth-fname (fields/first-forename-from-rec birth-record)
-        birth-mmn (:mm-name birth-record)
-        matching-death-recs (->>
-                            recs/deaths
-                            (filter #(= birth-year (fields/est-birth-from-death-rec %)))
-                            (filter #(= birth-gender (:gender %)))
-                            (filter #(= birth-fname (fields/first-forename-from-rec %)))
-                            (filter #(fields/=-and-has-data? birth-mmn (:mm-name %))))]
-      (utils/if-1-only matching-death-recs)))
+(defn match-against-birth
+  "Find records in other-rec-coll which could be matches against birth-rec"
+  [birth-rec other-rec-coll]
+  (let [birth-year (:year birth-rec)
+        birth-gender (:gender birth-rec)
+        birth-fname (fields/first-forename-from-rec birth-rec)
+        birth-mm-name (:mm-name birth-rec)]
+    (->>
+      other-rec-coll
+      (filter #(= (fields/first-forename-from-rec %) birth-fname))
+      (filter #(fields/between-years?
+                 (match-p/est-birth-year-range %)
+                 birth-year))
+      (filter #(match-p/match-on-gender % birth-gender))
+      (filter #(match-p/match-on-mm-name % birth-mm-name)))))
 
-;; Matching by record type
+(defn match-against-death
+  "Find records in other-rec-coll which could be matches against death-rec"
+  [death-rec other-record-coll]
+  (let [est-birth-year-range-from-death (match-p/est-birth-year-range death-rec)
+        death-gender (:gender death-rec)
+        death-fname (fields/first-forename-from-rec death-rec)
+        death-mm-name (:mm-name death-rec)]
+    (->>
+      other-record-coll
+      (filter #(= (fields/first-forename-from-rec %) death-fname))
+      (filter #(fields/ranges-overlap?
+                 est-birth-year-range-from-death
+                 (match-p/est-birth-year-range %)))
+      (filter #(match-p/match-on-gender % death-gender))
+      (filter #(match-p/match-on-mm-name % death-mm-name)))))
 
-(defn- not-impl-match
+(defn match-against-marriage
+  "Find records in other-rec-coll which could be matches against marriage-rec"
+  [marriage-rec other-rec-coll]
+  (let [marriage-year (:year marriage-rec)
+        marriage-fname (fields/first-forename-from-rec marriage-rec)
+        ]
+    (->>
+      other-rec-coll
+      (filter #(= (fields/first-forename-from-rec %) marriage-fname))
+      (filter #(let [birth-range (match-p/est-birth-year-range %)
+                     est-age-at-marriage (fields/est-age-at-year birth-range marriage-year)]
+                 (fields/ranges-overlap? consts/marriage-age-range
+                                         est-age-at-marriage))))))
+
+(defn match-against-census
+  "Find records in other-rec-coll which could be matches against census-rec"
+  [census-rec other-rec-coll]
+  nil) ; Not impl.
+
+(extend-protocol match-p/MatchAgainst
+  DeathRec
+  (match-fn [this] match-against-death)
+  BirthRec
+  (match-fn [this] match-against-birth)
+  MarriageRec
+  (match-fn [this] match-against-marriage)
+  CensusRec
+  (match-fn [this] match-against-census))
+
+(defn not-impl-match
   [match-types]
-  ;(println "Matching not impl. for" match-types) no-op
+  ; (println "Matching not impl. for" match-types) no-op
   )
 
-(defn- match-birth-to-death
-  [birth-record]
-  (let [single-matching-death-rec (match-birth-to-death-get-1 birth-record)]
-    (if single-matching-death-rec
-      (if (match-death-to-birth-get-1 single-matching-death-rec)
-        single-matching-death-rec))))
-        
-(defn- match-death-to-birth
-  [death-record]
-  (let [single-matching-birth-rec (match-death-to-birth-get-1 death-record)]
-    (if single-matching-birth-rec
-      (if (match-birth-to-death-get-1 single-matching-birth-rec)
-        single-matching-birth-rec))))
+(defn find-single-match
+  "Match another type of record (in match-coll) from record-type against source-record
+  source-coll is required to check back in the opposite direction that there is also only
+  one matching record"
+  [source-record source-coll match-coll]
+  (let [source-to-new-match-fn (match-p/match-fn source-record)
+        single-matching-rec (utils/if-1-only (source-to-new-match-fn source-record match-coll))]
+    (when single-matching-rec
+      (let [back-match-fn (match-p/match-fn single-matching-rec)]
+        (when (utils/if-1-only (back-match-fn single-matching-rec source-coll))
+          single-matching-rec)))))
 
 (defn match-for-record
   [match-types record]
   (case match-types
-    [:births :deaths] (match-birth-to-death record)
-    [:births :marriages] (not-impl-match match-types)
-    [:births :census] (not-impl-match match-types)
-    [:deaths :births] (match-death-to-birth record)
-    [:deaths :marriages] (not-impl-match match-types)
-    [:deaths :census] (not-impl-match match-types)
-    [:marriages :births] (not-impl-match match-types)
-    [:marriages :deaths] (not-impl-match match-types)
-    [:marriages :census] (not-impl-match match-types)
-    [:census :census] (not-impl-match match-types) ; Search in same type of record
-    [:census :births] (not-impl-match match-types)
-    [:census :deaths] (not-impl-match match-types)
+    [:births :deaths] (find-single-match record recs/births recs/deaths)
+    [:births :marriages] (find-single-match record recs/births recs/marriages)
+    [:births :census] (not-impl-match match-types) ; Not impl
+    [:deaths :births] (find-single-match record recs/deaths recs/births)
+    [:deaths :marriages] (find-single-match record recs/deaths recs/marriages)
+    [:deaths :census] (not-impl-match match-types) ; Not impl
+    [:marriages :births] (find-single-match record recs/marriages recs/births)
+    [:marriages :deaths] (find-single-match record recs/marriages recs/deaths)
+    [:marriages :census] (not-impl-match match-types) ; Not impl
+    [:census :census] (not-impl-match match-types) ; Not impl Search in same type of record
+    [:census :births] (not-impl-match match-types) ; Not impl
+    [:census :deaths] (not-impl-match match-types) ; Not impl
     [:census :marriages] (not-impl-match match-types)
-    (println "!! UNEXPECTED PAIR !!" match-types)))
-    
+    nil 
+    (println "!! UNEXPECTED PAIR !!" match-types)
+    ))
+
