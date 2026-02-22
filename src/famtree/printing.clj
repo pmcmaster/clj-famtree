@@ -3,7 +3,7 @@
 
 ;; Print helpers for displaying records
 
-(defn- show-stats
+(defn show-stats
   "Print out details of info referenced by data-symbol"
   [data-symbol]
   (let [data (var-get data-symbol)]

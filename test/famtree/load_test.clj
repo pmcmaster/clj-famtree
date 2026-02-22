@@ -6,6 +6,7 @@
   (testing "Tests the field-to-keyword conversion"
     (is (= (l/field-name-to-keyword "sdfdD") :sdfdd))
     (is (= (l/field-name-to-keyword "Mother's Maiden Name") :mm-name))
+    (is (= (l/field-name-to-keyword "Ref") :rec-ref)) ; Avoids clash with 'ref' keyword
     (is (= (l/field-name-to-keyword "County / City") :county-city))
     (is (= (l/field-name-to-keyword "This Has Spaces") :this-has-spaces))))
 

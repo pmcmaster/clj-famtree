@@ -15,7 +15,7 @@
 (defn field-name-to-keyword 
   "Convert header row from CSV file into keywords, with some replacements of long names"
   [fieldname]
-  (let [non-std-fields {"Mother's Maiden Name" :mm-name "County / City" :county-city}
+  (let [non-std-fields {"Mother's Maiden Name" :mm-name "County / City" :county-city "Ref" :rec-ref}
         non-std-name (non-std-fields fieldname)]
     (if (nil? non-std-name)
       (-> fieldname

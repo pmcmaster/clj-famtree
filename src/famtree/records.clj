@@ -15,3 +15,6 @@
      :deaths deaths
      :marriages marriages
      :census census})
+
+(defrecord CensusRec [surname forename year gender age-at-census rec-ref re-name county-city])
+
