@@ -13,18 +13,14 @@
         (vector grouping-key record-count)))
     grouped-records))
     
-(defn random-record-type-pair
-  "Return a pair of record types to try to match"
-  []
-  (let [type-list (vec recs/all-types)
-        type1 (rand-nth type-list)]
-    (if (= type1 :census) ; Census is only type one person can show up in multiple times
-      [type1 (rand-nth type-list)]
-      [type1 (rand-nth (vec (disj recs/all-types type1)))])))
-      
 (defn if-1-only
   "Return the element in coll if there is only one"
   [coll]
   (if (= 1 (count coll))
     (first coll)))
-    
+
+(defn rand-pair-of-record-lists
+  "Choose two of the record types at random"
+  []
+  (take 2 (shuffle recs/all-collections)))
+

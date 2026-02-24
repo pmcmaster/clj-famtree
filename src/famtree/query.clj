@@ -8,3 +8,4 @@
   "Count of census records for each region"
   []
   (utils/counts-by-grouping (group-by :county-city recs/census)))
+

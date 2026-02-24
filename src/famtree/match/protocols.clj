@@ -1,4 +1,4 @@
-(ns famtree.match-proto)
+(ns famtree.match.protocols)
 
 (defprotocol MatchableRecord
   "Functions used for matching records against other collections of records"
@@ -7,5 +7,5 @@
   (match-on-mm-name [this other-mm-name] "match on mother's maiden name"))
 
 (defprotocol MatchAgainst
-  (match-fn [this] "Function which matches this type of record against other types"))
+  (match-fn [this] "Should return a function which matches this type of record against other types"))
 

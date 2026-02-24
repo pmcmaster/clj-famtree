@@ -1,6 +1,6 @@
 (ns famtree.fields
   (:require [clojure.string :as str]
-            [clojure.set]))
+            [clojure.set :as set]))
 
 ;; Computed record queries
 
@@ -45,7 +45,7 @@
           [pair2-1 pair2-2] (sort pair2)
           set1 (set (range pair1-1 (inc pair1-2)))
           set2 (set (range pair2-1 (inc pair2-2)))]
-      (not (empty? (clojure.set/intersection set1 set2))))))
+      (not (empty? (set/intersection set1 set2))))))
 
 (defn est-birth-range-from-age
   "Estimates a birth year range from an age and a record year

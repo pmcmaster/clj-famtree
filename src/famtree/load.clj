@@ -13,44 +13,41 @@
       (doall (csv/read-csv reader :separator \tab)))))
 
 (defn field-name-to-keyword 
-  "Convert header row from CSV file into keywords, with some replacements of long names"
+  "Convert header row from CSV file into keywords
+  Has some specific replacements of long or punctuated names, or ones which conflict with language terms"
   [fieldname]
   (let [non-std-fields {"Mother's Maiden Name" :mm-name "County / City" :county-city "Ref" :rec-ref}
         non-std-name (non-std-fields fieldname)]
     (if (nil? non-std-name)
       (-> fieldname
-        (str/replace " " "-")
-        str/lower-case
-        keyword)
+          (str/replace " " "-")
+          str/lower-case
+          keyword)
       non-std-name)))
 
 (defn parse-int-or-nil
   "Parse value to an Integer if possible, otherwise return nil"
   [value]
-    (if (re-matches #"[0-9]+" value)
-      (Integer/parseInt value)))
+  (if (re-matches #"[0-9]+" value)
+    (Integer/parseInt value)))
 
 (defn parse-field-value
   "Parse field-val into appropriate value, behaviour based on field-key"
   [field-key field-val]
-    (try
-      (let [field-name (apply str (rest (str field-key)))
-            numeric-field (some #(str/starts-with? field-name %) ["year" "age-"])]
-        (if numeric-field
-          (parse-int-or-nil field-val) ; NB: Does not currently throw an exception - may be nil
-          field-val))
-    (catch Exception e
-      (println "Was trying to parse:" field-key field-val)
-      (throw e))))
+  (let [field-name (str field-key)
+        numeric-field (some #(str/starts-with? field-name %) [":year" ":age-"])]
+    (if numeric-field
+      (parse-int-or-nil field-val) ; NB: Does not currently throw an exception - may be nil
+      field-val)))
 
 (defn row-to-map
   "Convert a list of lists of text fields to a map, using the field-keys provided
-    and converting some values according to the field names"
+  and converting some values according to the field names"
   [text-row-coll field-keys]
-    (reduce-kv
-      (fn [m key val] (assoc m key (parse-field-value key val)))
-      {}
-      (zipmap field-keys text-row-coll)))
+  (reduce-kv
+    (fn [result-map key val] (assoc result-map key (parse-field-value key val)))
+    {}
+    (zipmap field-keys text-row-coll)))
 
 (defn data-as-map
   "Process the raw records for a record type.
@@ -59,7 +56,7 @@
   (let [header-row (first raw-data)
         header-fields (map field-name-to-keyword header-row)
         data-rows (rest raw-data)]
-      (map #(row-to-map % header-fields) data-rows)))
+    (map #(row-to-map % header-fields) data-rows)))
 
 (defn data-for-type
   "The properly formated map of data for a given record-type"

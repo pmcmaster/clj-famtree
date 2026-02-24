@@ -18,15 +18,15 @@
   (show-stats #'recs/census))
 
 ;; General display of records
-    
+
 (defn print-grouped-data
   "Print out grouped data
-    Grouping is printed first, then records in that grouping line-by-line"
+  Grouping is printed first, then records in that grouping line-by-line"
   [grouped-data]
   (doseq [[grouping-key coll] grouped-data]
     (println "==" grouping-key "==")
-      (doseq [data-row coll]
-        (println "  " data-row))))
+    (doseq [data-row coll]
+      (println "  " data-row))))
 
 (defn print-records
   "Prints out records, one per-line"
@@ -38,6 +38,7 @@
 
 (defn print-grouped-by-year
   "Prints a collection of records (likely census records), grouped by year
-    with headings for each year, then each record on a line"
+  with headings for each year, then each record on a line"
   [records]
   (print-grouped-data (group-by :year records)))
+
