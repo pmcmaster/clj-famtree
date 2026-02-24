@@ -3,7 +3,7 @@
 
 ;; Print helpers for displaying records
 
-(defn show-stats
+(defn print-stats
   "Print out details of info referenced by data-symbol"
   [data-symbol]
   (let [data (var-get data-symbol)]
@@ -12,12 +12,21 @@
 (defn print-record-summary
   "Prints out counts of the loaded records"
   []
-  (show-stats #'recs/births)
-  (show-stats #'recs/deaths)
-  (show-stats #'recs/marriages)
-  (show-stats #'recs/census))
+  (println "Loaded:")
+  (print-stats #'recs/births)
+  (print-stats #'recs/deaths)
+  (print-stats #'recs/marriages)
+  (print-stats #'recs/census))
 
 ;; General display of records
+
+(defn print-match-success
+  "Info on two matching records"
+  [source-rec matched-rec]
+  (println "==== Matched 1-1 ====")
+  (println source-rec)
+  (println matched-rec)
+  (println))
 
 (defn print-grouped-data
   "Print out grouped data

@@ -22,5 +22,5 @@
 (defn rand-pair-of-record-lists
   "Choose two of the record types at random"
   []
-  (take 2 (shuffle recs/all-collections)))
+  (take 2 (shuffle recs/all-collection-refs)))
 

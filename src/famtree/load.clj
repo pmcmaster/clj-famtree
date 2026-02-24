@@ -45,7 +45,7 @@
   and converting some values according to the field names"
   [text-row-coll field-keys]
   (reduce-kv
-    (fn [result-map key val] (assoc result-map key (parse-field-value key val)))
+    (fn [result-map k v] (assoc result-map k (parse-field-value k v)))
     {}
     (zipmap field-keys text-row-coll)))
 

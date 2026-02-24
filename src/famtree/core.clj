@@ -1,25 +1,41 @@
 (ns famtree.core
   (:require [famtree.records :as recs]
-            [famtree.printing :as prt]
+            [famtree.printing :as p]
             [famtree.utils :as utils]
-            [famtree.match.core :as match])
+            [famtree.match.core :as m])
   (:gen-class))
 
-;; Main execution
+(defn assoc-new-match-backref
+  "Update coll to add an entry for the reverse-direction match reference"
+  [coll ref-pair source-rec match-rec]
+  (assoc-in coll [ref-pair match-rec] source-rec))
+
+(defn assoc-new-match
+  "Update coll to add an entry for a new match reference and the reverse reference"
+  [coll ref-pair source-rec match-rec]
+  (-> coll
+      (assoc-in [ref-pair source-rec] match-rec)
+      (assoc-new-match-backref (reverse ref-pair) source-rec match-rec)))
+
+(defn match-records
+  "Match records from source-seq"
+  ([source-seq] (match-records {} 0 source-seq))
+  ([matches-by-type match-count source-seq]
+   (if-let [[ref-pair source-rec] (first source-seq)]
+     (if-let [existing-match (get-in matches-by-type [ref-pair source-rec])]
+       (recur matches-by-type match-count (rest source-seq))
+       (if-let [matching-rec (m/find-single-match source-rec ref-pair)]
+         (let [updated-matches-by-type (assoc-new-match matches-by-type
+                                                        ref-pair
+                                                        source-rec matching-rec)
+               new-match-count (inc match-count)]
+           (p/print-match-success source-rec matching-rec)
+           (println new-match-count "matches")
+           (recur updated-matches-by-type new-match-count (rest source-seq)))
+         (recur matches-by-type match-count (rest source-seq)))))))
 
 (defn -main
-  "Read in records and process them."
   [& args]
-  (println "Loaded:")
-  (prt/print-record-summary)
-
-  (doseq [[source-rec-coll target-rec-coll] (repeatedly utils/rand-pair-of-record-lists)]
-    (let [source-rec (rand-nth source-rec-coll)
-          matching-rec (match/find-single-match source-rec source-rec-coll target-rec-coll)]
-      (if matching-rec
-        (do 
-          (println "==== Matched 1-1 ====")
-          (println source-rec)
-          (println matching-rec)
-          (println))))))
+  (p/print-record-summary)
+  (match-records (recs/all-source-recs-with-types)))
 

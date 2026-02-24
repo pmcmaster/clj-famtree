@@ -11,46 +11,42 @@
   [birth-rec other-rec-coll]
   (let [birth-year (:year birth-rec)
         birth-gender (:gender birth-rec)
-        birth-fname (fields/first-forename-from-rec birth-rec)
+        birth-fname (match-p/first-forename birth-rec)
         birth-mm-name (:mm-name birth-rec)]
-    (->>
-      other-rec-coll
-      (filter #(= (fields/first-forename-from-rec %) birth-fname))
-      (filter #(fields/between-years?
-                                      (match-p/est-birth-year-range %)
-                                      birth-year))
-      (filter #(match-p/match-on-gender % birth-gender))
-      (filter #(match-p/match-on-mm-name % birth-mm-name)))))
+    (->> other-rec-coll
+         (filter #(= (match-p/first-forename %) birth-fname))
+         (filter #(fields/between-years?
+                    (match-p/est-birth-year-range %)
+                    birth-year))
+         (filter #(match-p/match-on-gender % birth-gender))
+         (filter #(match-p/match-on-mm-name % birth-mm-name)))))
 
 (defn match-against-death
   "Find records in other-rec-coll which could be matches against death-rec"
   [death-rec other-record-coll]
   (let [est-birth-year-range-from-death (match-p/est-birth-year-range death-rec)
         death-gender (:gender death-rec)
-        death-fname (fields/first-forename-from-rec death-rec)
+        death-fname (match-p/first-forename death-rec)
         death-mm-name (:mm-name death-rec)]
-    (->>
-      other-record-coll
-      (filter #(= (fields/first-forename-from-rec %) death-fname))
-      (filter #(fields/ranges-overlap?
-                                       est-birth-year-range-from-death
-                                       (match-p/est-birth-year-range %)))
-      (filter #(match-p/match-on-gender % death-gender))
-      (filter #(match-p/match-on-mm-name % death-mm-name)))))
+    (->> other-record-coll
+         (filter #(= (match-p/first-forename %) death-fname))
+         (filter #(fields/ranges-overlap?
+                    est-birth-year-range-from-death
+                    (match-p/est-birth-year-range %)))
+         (filter #(match-p/match-on-gender % death-gender))
+         (filter #(match-p/match-on-mm-name % death-mm-name)))))
 
 (defn match-against-marriage
   "Find records in other-rec-coll which could be matches against marriage-rec"
   [marriage-rec other-rec-coll]
   (let [marriage-year (:year marriage-rec)
-        marriage-fname (fields/first-forename-from-rec marriage-rec)
-        ]
-    (->>
-      other-rec-coll
-      (filter #(= (fields/first-forename-from-rec %) marriage-fname))
-      (filter #(let [birth-range (match-p/est-birth-year-range %)
-                     est-age-at-marriage (fields/est-age-at-year birth-range marriage-year)]
-                 (fields/ranges-overlap? consts/marriage-age-range
-                                         est-age-at-marriage))))))
+        marriage-fname (match-p/first-forename marriage-rec)]
+    (->> other-rec-coll
+         (filter #(= (match-p/first-forename %) marriage-fname))
+         (filter #(let [birth-range (match-p/est-birth-year-range %)
+                        est-age-at-marriage (fields/est-age-at-year birth-range marriage-year)]
+                    (fields/ranges-overlap? consts/marriage-age-range
+                                            est-age-at-marriage))))))
 
 (defn match-against-census
   "Find records in other-rec-coll which could be matches against census-rec"
