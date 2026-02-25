@@ -24,11 +24,13 @@
 (defn match-against-death
   "Find records in other-rec-coll which could be matches against death-rec"
   [death-rec other-record-coll]
-  (let [est-birth-year-range-from-death (match-p/est-birth-year-range death-rec)
+  (let [death-year (:year death-rec)
+        est-birth-year-range-from-death (match-p/est-birth-year-range death-rec)
         death-gender (:gender death-rec)
         death-fname (match-p/first-forename death-rec)
         death-mm-name (:mm-name death-rec)]
     (->> other-record-coll
+         (filter #(<= (:year %) death-year))
          (filter #(= (match-p/first-forename %) death-fname))
          (filter #(fields/ranges-overlap?
                     est-birth-year-range-from-death

@@ -20,8 +20,8 @@
 
 (defn print-match-success
   "Info on two matching records"
-  [source-rec matched-rec]
-  (println "==== Matched 1-1 ====")
+  [source-rec matched-rec match-count]
+  (println "==== Matched 1-1" match-count " matches====")
   (println source-rec)
   (println matched-rec)
   (println))
