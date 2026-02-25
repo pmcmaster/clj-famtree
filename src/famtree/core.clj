@@ -1,5 +1,5 @@
 (ns famtree.core
-  (:require [famtree.records :as recs]
+  (:require [famtree.records.collections :as rec-colls]
             [famtree.printing :as p]
             [famtree.utils :as utils]
             [famtree.match.core :as m])
@@ -37,5 +37,5 @@
 (defn -main
   [& args]
   (p/print-record-summary)
-  (match-records (recs/all-source-recs-with-types)))
+  (match-records (rec-colls/all-source-recs-with-types)))
 

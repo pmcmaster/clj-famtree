@@ -1,5 +1,4 @@
-(ns famtree.utils
-  (:require [famtree.records :as recs]))
+(ns famtree.utils)
 
 ;; Utility functions for working with records
 
@@ -18,9 +17,4 @@
   [coll]
   (if (= 1 (count coll))
     (first coll)))
-
-(defn rand-pair-of-record-lists
-  "Choose two of the record types at random"
-  []
-  (take 2 (shuffle recs/all-collection-refs)))
 

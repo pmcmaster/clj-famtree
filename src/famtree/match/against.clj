@@ -1,5 +1,5 @@
 (ns famtree.match.against 
-  (:import [famtree.records BirthRec DeathRec MarriageRec CensusRec])
+  (:import [famtree.records.core BirthRec DeathRec MarriageRec CensusRec])
   (:require [famtree.match.protocols :as match-p]
             [famtree.fields :as fields]
             [famtree.consts :as consts]))
@@ -51,7 +51,15 @@
 (defn match-against-census
   "Find records in other-rec-coll which could be matches against census-rec"
   [census-rec other-rec-coll]
-  nil) ; Not impl. - nothing matches this yet
+  (let [est-birth-year-range-from-census (match-p/est-birth-year-range census-rec)
+        census-fname (match-p/first-forename census-rec)
+        census-gender (:gender census-rec)]
+    (->> other-rec-coll
+         (filter #(= (match-p/first-forename %) census-fname))
+         (filter #(fields/ranges-overlap?
+                    est-birth-year-range-from-census
+                    (match-p/est-birth-year-range %)))
+         (filter #(match-p/match-on-gender % census-gender)))))
 
 (extend-protocol match-p/MatchAgainst
   DeathRec

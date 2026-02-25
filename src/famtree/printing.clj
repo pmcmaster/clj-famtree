@@ -1,5 +1,5 @@
 (ns famtree.printing 
-  (:require [famtree.records :as recs]))
+  (:require [famtree.records.collections :as rec-colls]))
 
 ;; Print helpers for displaying records
 
@@ -13,10 +13,8 @@
   "Prints out counts of the loaded records"
   []
   (println "Loaded:")
-  (print-stats #'recs/births)
-  (print-stats #'recs/deaths)
-  (print-stats #'recs/marriages)
-  (print-stats #'recs/census))
+  (doseq [record-ref rec-colls/all-collection-refs]
+    (print-stats record-ref)))
 
 ;; General display of records
 
