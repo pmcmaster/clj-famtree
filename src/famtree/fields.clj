@@ -10,10 +10,15 @@
   (if (string? field-content)
     (re-matches #"-+" field-content)))
 
+(defn first-word-from-field
+  "Get the first word from a field in a record"
+  [field rec]
+  (first (str/split (field rec) #" ")))
+
 (defn first-forename-from-rec
   "Get the first forename from a record {:forename 'Bob David' would return 'Bob'}"
   [rec]
-  (first (str/split (:forename rec) #" ")))
+  (first-word-from-field :forename rec))
 
 (defn =-and-has-data?
   "Two values are considered equal only if they are not the 'no data' '-----' value,

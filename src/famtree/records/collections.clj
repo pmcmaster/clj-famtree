@@ -23,6 +23,15 @@
 
 (def all-collection-refs (concat [#'births #'deaths #'marriages] census-by-year-syms))
 
+(defn all-records-except-marriage
+  "One big collection with everything except marriage records"
+  []
+  (->>
+    all-collection-refs
+    (filter #(not= #'marriages %))
+    (map var-get)
+    (reduce concat)))
+
 (defn rand-rec-from-coll-ref
   "Returns a random record from the collection referenced"
   [record-coll-ref]

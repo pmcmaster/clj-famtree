@@ -10,11 +10,11 @@
   [source-record [source-coll-ref search-coll-ref]]
   (let [source-coll (var-get source-coll-ref)
         search-coll (var-get search-coll-ref)
-        source-to-new-match-fn (match-p/match-fn source-record)
+        source-to-new-match-fn (match-p/match-same-fn source-record)
         matching-recs (source-to-new-match-fn source-record search-coll)
         single-matching-rec (utils/if-1-only matching-recs)]
     (when single-matching-rec
-      (let [back-match-fn (match-p/match-fn single-matching-rec)
+      (let [back-match-fn (match-p/match-same-fn single-matching-rec)
             matching-recs-reverse-direction (back-match-fn single-matching-rec source-coll)]
         (when (utils/if-1-only matching-recs-reverse-direction)
           single-matching-rec)))))
