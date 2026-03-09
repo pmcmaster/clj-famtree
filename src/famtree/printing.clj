@@ -41,6 +41,17 @@
   (doseq [record records]
     (println record)))
 
+;; Collated results (a set containing a set of records per-person)
+
+(defn print-collated-results
+  "Print the results out in a readable format"
+  [set-of-sets-per-person]
+  (doseq [records-for-person set-of-sets-per-person]
+    (println)
+    (doseq [each-rec (sort-by :year records-for-person)]
+      (println each-rec)))
+  (println "Details for" (count set-of-sets-per-person) "people"))
+
 ;; Specific for fields
 
 (defn print-grouped-by-year
@@ -48,4 +59,5 @@
   with headings for each year, then each record on a line"
   [records]
   (print-grouped-data (group-by :year records)))
+
 
