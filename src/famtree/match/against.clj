@@ -1,12 +1,16 @@
 (ns famtree.match.against 
-  (:import [famtree.records.core BirthRec DeathRec MarriageRec CensusRec])
+  "Functions to match a type of record against another record"
   (:require [famtree.match.protocols :as match-p]
             [famtree.records.match-same]
             [famtree.fields :as fields]
             [famtree.consts :as consts]
-            [famtree.records.names :as names]))
+            [famtree.records.names :as names])
+  (:import [famtree.records.core BirthRec DeathRec
+            MarriageRec MarriageSpouseRec CensusRec]))
 
-; Matching funcs for each type of record
+;; TODO: Split these out into lists of predicates.
+;; This should allow some kind of 'explain match' (or lack of match)
+;; feature.
 
 (defn match-against-birth
   "Find records in other-rec-coll which could be matches against birth-rec"
@@ -30,10 +34,12 @@
         est-birth-year-range-from-death (match-p/est-birth-year-range death-rec)
         death-gender (:gender death-rec)
         death-fname (fields/first-forename-from-rec death-rec)
+        death-surname (:surname death-rec)
         death-mm-name (:mm-name death-rec)]
     (->> other-record-coll
          (filter #(<= (:year %) death-year))
          (filter #(match-p/match-on-forename % death-fname))
+         (filter #(match-p/match-on-surname % death-surname death-year))
          (filter #(fields/ranges-overlap?
                     est-birth-year-range-from-death
                     (match-p/est-birth-year-range %)))
@@ -44,21 +50,81 @@
   "Find records in other-rec-coll which could be matches against marriage-rec"
   [marriage-rec other-rec-coll]
   (let [marriage-year (:year marriage-rec)
-        fname1 (fields/first-word-from-field :forename marriage-rec)
-        fname2 (fields/first-word-from-field :spouse-forename marriage-rec)
-        genders-to-forenames (names/names-by-gender fname1 fname2)]
+        marriage-forename (fields/first-word-from-field :forename marriage-rec)
+        marriage-surname (fields/first-word-from-field :surname marriage-rec)
+        other-forename (fields/first-word-from-field
+                         :spouse-forename marriage-rec)
+        other-surname (fields/first-word-from-field
+                        :spouse-surname marriage-rec)
+        marriage-gender (names/infer-gender-from-forename-pair
+                          marriage-forename other-forename)
+        surname-after-marriage (if (= marriage-gender consts/female)
+                                 other-surname
+                                 marriage-surname)]
     (->> other-rec-coll
-         (filter #(= (fields/first-forename-from-rec %)
-                     (get genders-to-forenames (:gender %))))
+         (filter #(cond
+                    ;; Event before marriage
+                   (< (:year %) marriage-year)
+                   (= (:surname %) marriage-surname)
+                   ;; Event after marriage
+                   (> (:year %) marriage-year)
+                   (= (:surname %) surname-after-marriage)
+                   ;; Event same year as marriage
+                   (= (:year %) marriage-year)
+                   ((hash-set marriage-surname surname-after-marriage)
+                    (:surname %))))
+         (filter #(match-p/match-on-gender % marriage-gender))
+         ;; TODO: Split following function up
          (filter #(let [birth-range (match-p/est-birth-year-range %)
-                        est-age-at-marriage (fields/est-age-at-year birth-range marriage-year)]
+                        est-age-at-marriage (fields/est-age-at-year
+                                              birth-range marriage-year)]
+                    (fields/ranges-overlap? consts/marriage-age-range
+                                            est-age-at-marriage))))))
+
+(defn match-against-marriage-spouse
+  "Find records in other-rec-coll which could be matches against marriage-rec
+  Differs from marriage matching in that it uses spouse names, not plain names"
+  ;; TODO: Refactor to extract out common code (lots of it) and pass in
+  ;; different names
+  [marriage-rec other-rec-coll]
+  (let [marriage-year (:year marriage-rec)
+        marriage-forename (fields/first-word-from-field
+                            :spouse-forename marriage-rec)
+        marriage-surname (fields/first-word-from-field
+                           :spouse-surname marriage-rec)
+        other-forename (fields/first-word-from-field :forename marriage-rec)
+        other-surname (fields/first-word-from-field
+                        :surname marriage-rec)
+        marriage-gender (names/infer-gender-from-forename-pair
+                          marriage-forename other-forename)
+        surname-after-marriage (if (= marriage-gender consts/female)
+                                 other-surname
+                                 marriage-surname)]
+    (->> other-rec-coll
+         (filter #(cond
+                    ;; Event before marriage
+                   (< (:year %) marriage-year)
+                   (= (:surname %) marriage-surname)
+                   ;; Event after marriage
+                   (> (:year %) marriage-year)
+                   (= (:surname %) surname-after-marriage)
+                   ;; Event same year as marriage
+                   (= (:year %) marriage-year)
+                   ((hash-set marriage-surname surname-after-marriage)
+                    (:surname %))))
+         (filter #(match-p/match-on-forename % marriage-forename))
+         (filter #(match-p/match-on-gender % marriage-gender))
+         (filter #(let [birth-range (match-p/est-birth-year-range %)
+                        est-age-at-marriage (fields/est-age-at-year
+                                              birth-range marriage-year)]
                     (fields/ranges-overlap? consts/marriage-age-range
                                             est-age-at-marriage))))))
 
 (defn match-against-census
   "Find records in other-rec-coll which could be matches against census-rec"
   [census-rec other-rec-coll]
-  (let [est-birth-year-range-from-census (match-p/est-birth-year-range census-rec)
+  (let [est-birth-year-range-from-census (match-p/est-birth-year-range
+                                           census-rec)
         census-fname (fields/first-forename-from-rec census-rec)
         census-gender (:gender census-rec)]
     (->> other-rec-coll
@@ -75,6 +141,8 @@
   (match-same-fn [this] match-against-birth)
   MarriageRec
   (match-same-fn [this] match-against-marriage)
+  MarriageSpouseRec
+  (match-same-fn [this] match-against-marriage-spouse)
   CensusRec
   (match-same-fn [this] match-against-census))
 

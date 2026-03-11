@@ -4,9 +4,9 @@
 
  ;TODO Assertions here are specific to current data used
 
-(deftest test-all-surnames
+(deftest test-core-surnames
   (is (= 10
-         (count (n/all-surnames-except-marriage-recs)))))
+         (count n/core-surnames))))
 
 (deftest test-first-names-by-gender
   (is (= ["M", "F", "-----"]
@@ -28,14 +28,4 @@
   (is (= "F"
          (n/gender-for-name "CHARLOTTE")))
   (is (nil? (n/gender-for-name "AGNES"))))
-
-(deftest test-names-by-gender
-  (is (= {}
-         (n/names-by-gender "ROBERT" "LILIAS")))
-  (is (= {"M" "DAVID" "F" "SUSAN"}
-         (n/names-by-gender "DAVID" "SUSAN"))))
-
-(deftest test-all-surnames-except-marriage-recs
-  (is (= 10
-         (count (n/all-surnames-except-marriage-recs)))))
 

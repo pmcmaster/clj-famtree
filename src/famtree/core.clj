@@ -40,19 +40,12 @@
   [rec-source]
   (reduce match-record-into-results [{} 0] rec-source))
 
-(defn relates-to-either
-  "Returns a-set if it contains either rec1 or rec2"
-  [a-set rec1 rec2]
-  (if (or (a-set rec1)
-          (a-set rec2))
-    a-set))
-
 (defn update-and-link
   "Add source-rec and dest-rec to the set of sets of existing records
   They should both be added to sets which already contain one of the records"
   [set-of-record-sets [source-rec dest-rec]]
-  (if-let [existing-set (first (filter ; TODO This first filter is not nice
-                                 (fn [e-set] (relates-to-either e-set source-rec dest-rec))
+  (if-let [existing-set (first (filter
+                                 (fn [e-set] (some #{source-rec dest-rec} e-set))
                                  set-of-record-sets))]
     (let [updated-set-for-person (conj existing-set source-rec dest-rec)]
       (-> set-of-record-sets
@@ -60,57 +53,20 @@
          (conj updated-set-for-person)))
     (conj set-of-record-sets #{source-rec dest-rec})))
 
-(defn update-link-marriage
-  "Add marriage record to existing records for a person
-  These need to be handled separately because they relate to two people"
-  [set-of-record-sets [marriage-rec other-rec]]
-  (if-let [existing-set (first (filter ; TODO This first filter is not nice
-                                 (fn [e-set] (e-set other-rec))
-                                 set-of-record-sets))]
-    (let [updated-set-for-person (conj existing-set marriage-rec)]
-      (-> set-of-record-sets
-          (disj existing-set)
-          (conj updated-set-for-person)))
-    (conj set-of-record-sets #{marriage-rec other-rec})))
-
-(defn process-non-marriage-results
+(defn collate-results
   "Build up a set of sets, where each contained set is entirely records relating
   to the same person
   Input is a map with keys being a source and destination reference for the record collection
   values are a pair of records (source-rec and dest-rec)"
   [matches-by-type]
   (->> matches-by-type
-       (filter (fn [[match-types _]] (not-any? (partial = #'rec-colls/marriages)
-                                               match-types)))
-       (into {})
        vals
        (reduce concat [])
        (reduce update-and-link #{})))
 
-(defn add-marriage-records-to-results
-  "Add marriage records in to other records per-person
-  Need to be handled separately as can refer to two people"
-  [matches-by-type set-of-record-sets]
-  (->> matches-by-type
-       (filter (fn [[[source-rec-coll-ref _] _]] (= #'rec-colls/marriages
-                                                     source-rec-coll-ref)))
-       (into {})
-       vals
-       (reduce concat [])
-       (reduce update-link-marriage set-of-record-sets)))
-
-(defn collate-results
-  "Collate output from the matching results
-  matches-by-type is a map
-  keys are a pair of references (source dest) to record collections
-  values are a pair of matched records (source and dest)"
-  [matches-by-type]
-  (->> (process-non-marriage-results matches-by-type)
-       (add-marriage-records-to-results matches-by-type)))
-
 (defn -main
   [& args]
-  (p/print-record-summary)
+  (p/print-record-summary rec-colls/all-collection-refs)
   (let [[matches-by-type _] (match-records (rec-colls/all-source-recs-with-types))
         matches-grouped-by-person (collate-results matches-by-type)]
     (p/print-collated-results matches-grouped-by-person)))
