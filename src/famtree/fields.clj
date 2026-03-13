@@ -1,11 +1,13 @@
 (ns famtree.fields
+  "Functions to test and compare fields in records"
   (:require [clojure.string :as str]
             [clojure.set :as set]))
 
 ;; Computed record queries
 
 (defn no-data?
-  "Returns field-content if it matches empty field marker which is something like '-----'"
+  "Returns field-content if it matches empty field marker which is something
+  like '-----'"
   [field-content]
   (if (string? field-content)
     (re-matches #"-+" field-content)))
@@ -16,19 +18,20 @@
   (first (str/split (field rec) #" ")))
 
 (defn first-forename-from-rec
-  "Get the first forename from a record {:forename 'Bob David' would return 'Bob'}"
+  "Get the first forename from a record {:forename 'Bob David'}
+  would return 'Bob'}"
   [rec]
   (first-word-from-field :forename rec))
 
 (defn =-and-has-data?
-  "Two values are considered equal only if they are not the 'no data' '-----' value,
-  and they match"
+  "Two values are considered equal only if they are not the no data ('-----')
+  value, and they match"
   [val1 val2]
   (and (not (no-data? val1)) (= val1 val2)))
 
 (defn =-or-no-data?
-  "Two values are considered possibly equal if either one of them is the 'no data' '-----' value,
-  or if they match"
+  "Two values are considered possibly equal if either one of them is the no
+  data ('-----') value, OR if they match"
   [val1 val2]
   (or (no-data? val1) (no-data? val2) (= val1 val2)))
 
@@ -53,7 +56,7 @@
       (not (empty? (set/intersection set1 set2))))))
 
 (defn est-birth-range-from-age
-  "Estimates a birth year range from an age and a record year
+  "Estimates a birth year range from an `age` and a `record-year`
   Birth year may be one year further behind than the simple subtraction"
   [age record-year]
   (if-not (some nil? [age record-year])

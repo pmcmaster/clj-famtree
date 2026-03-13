@@ -2,11 +2,11 @@
   (:require [clojure.test :refer :all]
             [famtree.utils :as u]))
 
-(deftest test-counts-by-grouping 
+(deftest counts-by-grouping-test
   (is (= (u/counts-by-grouping {:a [1 2 3] :b [5 6]})
          '( [:a 3] [:b 2] ))))
 
-(deftest test-if-1-only
+(deftest if-1-only-test
   (is (nil? (u/if-1-only [:a :b])))
   (is (= (u/if-1-only [:a]) :a)))
 

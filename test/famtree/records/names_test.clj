@@ -4,11 +4,11 @@
 
  ;TODO Assertions here are specific to current data used
 
-(deftest test-core-surnames
+(deftest core-surnames-test
   (is (= 10
          (count n/core-surnames))))
 
-(deftest test-first-names-by-gender
+(deftest first-names-by-gender-test
   (is (= ["M", "F", "-----"]
          (keys n/first-names-by-gender)))
   (is (= 258
@@ -16,13 +16,13 @@
   (is (= 482
          (count (get n/first-names-by-gender "F")))))
 
-(deftest test-female-forename?
+(deftest female-forename?-test
   (is (n/female-forename? "ELIZABETH")))
 
-(deftest test-male-forename?
+(deftest male-forename?-test
   (is (n/male-forename? "PETER")))
 
-(deftest test-gender-for-name
+(deftest gender-for-name-test
   (is (= "M"
          (n/gender-for-name "PETER")))
   (is (= "F"

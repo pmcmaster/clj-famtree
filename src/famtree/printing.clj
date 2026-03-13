@@ -1,6 +1,5 @@
-(ns famtree.printing)
-
-;; Print helpers for displaying records
+(ns famtree.printing
+  "Functions for outputting progress at various stages of matching")
 
 (defn print-stats
   "Print out details of info referenced by data-symbol"

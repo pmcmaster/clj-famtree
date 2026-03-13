@@ -2,7 +2,7 @@
   (:require [clojure.test :refer :all]
             [famtree.core :refer :all]))
 
-(deftest test-update-and-link
+(deftest update-and-link-test
   (let [start-set #{#{:a :b}
                     #{:d :e}}]
     (is (= (update-and-link start-set [:b :c])

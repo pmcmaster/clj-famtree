@@ -1,9 +1,22 @@
-(ns famtree.records.core)
+(ns famtree.records.core
+  "Records to hold data for each record type.
+  Should correspond to the header row in the relevant data files, taking into
+  account the mappings used for some fields in load")
 
-(defrecord BirthRec [surname forename mm-name gender year rec-ref rd-name])
-(defrecord DeathRec [surname forename age-at-death mm-name gender year rec-ref rd-name])
-(defrecord MarriageRec [surname forename spouse-surname spouse-forename year rec-ref rd-name])
-(defrecord MarriageSpouseRec
+(defrecord BirthRec
+  [surname forename mm-name gender year rec-ref rd-name])
+
+(defrecord DeathRec
+  [surname forename age-at-death mm-name gender year rec-ref rd-name])
+
+(defrecord MarriageRec
   [surname forename spouse-surname spouse-forename year rec-ref rd-name])
-(defrecord CensusRec [surname forename year gender age-at-census rec-ref rd-name county-city])
+
+(defrecord MarriageSpouseRec
+  ;; Same data as MarriageRec, but this focusses on the person identified by
+  ;; the spouse-surname and spouse-forename fields.
+  [surname forename spouse-surname spouse-forename year rec-ref rd-name])
+
+(defrecord CensusRec
+  [surname forename year gender age-at-census rec-ref rd-name county-city])
 
