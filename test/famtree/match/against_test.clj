@@ -1,13 +1,12 @@
 (ns famtree.match.against-test
   (:require [clojure.test :refer :all]
-            [famtree.records.core :use [->BirthRec
-                                        ->DeathRec
-                                        ->CensusRec
-                                        ->MarriageRec
-                                        ->MarriageSpouseRec]]
+            [famtree.records :use [->BirthRec
+                                   ->DeathRec
+                                   ->CensusRec
+                                   ->MarriageRec]]
             [famtree.match.protocols :as match-p]
             [famtree.match.against]
-            [famtree.records.names]))
+            [famtree.fields.names]))
 
 (def core-surnames-mock
   "Use only this as the 'core surname' for testing"
@@ -37,8 +36,8 @@
   (->MarriageRec "SMITH" "ALAN" "JONES" "ELIZABETH" 1852 "m-ref" "m-rdn"))
 
 (def marriage-alan-jones-to-eliz-smith
-  (->MarriageSpouseRec
-    "JONES" "ALAN" "SMITH" "ELIZABETH" 1852 "m-ref" "m-rdn"))
+  (->MarriageRec
+    "SMITH" "ELIZABETH" "JONES" "ALAN" 1852 "m-ref" "m-rdn"))
 
 ;; (defrecord CensusRec
 ;; [surname forename year gender age-at-census rec-ref rd-name county-city])
@@ -48,7 +47,7 @@
 (defn match-same-succeeds
   "Match two records against each other - they are expected to match"
   [source-rec other-rec]
-  (with-redefs [famtree.records.names/core-surnames core-surnames-mock]
+  (with-redefs [famtree.fields.names/core-surnames core-surnames-mock]
     (let [match-same-fn (match-p/match-same-fn source-rec)
           match-result (match-same-fn source-rec [other-rec])]
       (is (= 1 (count match-result)))
@@ -64,7 +63,7 @@
 (defn match-same-fails
   "Match two records against each other - they are expected to NOT match"
   [source-rec other-rec]
-  (with-redefs [famtree.records.names/core-surnames core-surnames-mock]
+  (with-redefs [famtree.fields.names/core-surnames core-surnames-mock]
     (let [match-same-fn (match-p/match-same-fn source-rec)
           match-result (match-same-fn source-rec [other-rec])]
       (is (empty? match-result)))))

@@ -1,46 +1,32 @@
-(ns famtree.records.collections
+(ns famtree.record-colls.main-records
   "Lists of records, organised by record type
   There is some initial filtering done on some of the collections"
-  (:require [famtree.records.raw-collections :as raw-colls]
-            [famtree.records.names :as names]))
+  (:require [famtree.record-colls.raw-records :as raw-colls]
+            [famtree.fields.gender :as gender]
+            [famtree.fields.marriage :as marriage]))
 
 (def births (var-get #'raw-colls/births))
 (def deaths (var-get #'raw-colls/deaths))
 
 (def marriages
-  "Records for marriages, focussing on the person recorded as surname and
+  "Records for marriages, focusing on the person recorded as surname and
   forename"
   (->> (var-get #'raw-colls/marriages)
-       ;; If a person is a 'JONES', and male, and the core surename is 'SMITH'
-       ;; then this person is going to stay a 'JONES' after marriage, and not
-       ;; become a 'SMITH'. Filter these records out here.
-       (filter (fn [rec] (let [is-female (names/female-forename?
-                                           (:forename rec))
-                               partner-is-male (names/male-forename?
-                                                 (:spouse-forename rec))]
-                           (or (or is-female partner-is-male)
-                               (names/is-core-surname (:surname rec))))))))
+       (filter marriage/possible-core-person)))
 
 (def marriages-spouse 
-  "Records for marriages, focussing on the person recorded as spouse-surname
-  and spouse-forename"
+  "Records for marriages, focusing on the person originally recorded as
+  spouse-surname and spouse-forename. These fields are flipped around so that
+  data is in the usual surname/forename fields"
   (->> (var-get #'raw-colls/marriages-spouse)
-       ;; If a person is a 'JONES', and male, and the core surename is 'SMITH'
-       ;; then this person is going to stay a 'JONES' after marriage, and not
-       ;; become a 'SMITH'. Filter these records out here.
-       (filter (fn [rec] (let [is-female (names/female-forename?
-                                           (:spouse-forename rec))
-                               partner-is-male (names/male-forename?
-                                                 (:forename rec))]
-                           (or (or is-female partner-is-male)
-                               (names/is-core-surname
-                                 (:spouse-surname rec))))))))
+       (filter marriage/possible-core-person)))
 
 (defn create-census-def-for-year
   "Create a ref for a year's worth of census records
   Census records for a given year are essentially a standalone dataset"
   [[year recs]]
-  (intern 'famtree.records.collections (symbol (str "census-" year)) recs))
+  (intern 'famtree.record-colls.main-records
+          (symbol (str "census-" year)) recs))
 
 (def census-by-year-syms
   "List of the dynamically-created record collections for census.

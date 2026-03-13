@@ -14,11 +14,11 @@
   (is (= (l/parse-int-or-nil "234") 234))
   (is (nil? (l/parse-int-or-nil "s2324"))))
 
-(deftest parse-field-value-test
-  (is (= (l/parse-field-value :blah "123") "123"))
-  (is (= (l/parse-field-value :age-something "27") 27))
-  (is (= (l/parse-field-value :year "1984") 1984))
-  (is (nil? (l/parse-field-value :year "something-not-num1984")))) 
+(deftest parse-field-value-fn-test
+  (is (= ((l/parse-field-value-fn :blah) "123") "123"))
+  (is (= ((l/parse-field-value-fn :age-something) "27") 27))
+  (is (= ((l/parse-field-value-fn :year) "1984") 1984))
+  (is (nil? ((l/parse-field-value-fn :year) "something-not-num1984")))) 
 
 (deftest row-to-map-test
   (let [field-keys [:one :two :year]

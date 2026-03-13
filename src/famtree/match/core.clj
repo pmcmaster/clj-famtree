@@ -1,8 +1,14 @@
 (ns famtree.match.core
   "Core matching functions"
   (:require [famtree.match.protocols :as match-p]
-            [famtree.match.against]
-            [famtree.utils :as utils]))
+            [famtree.match.against]))
+
+(defn if-1-only
+  "Return the element in `coll` if there is only one
+  Returns nil if there are zero or > 1 items"
+  [coll]
+  (if (= 1 (count coll))
+    (first coll)))
 
 (defn find-single-match
   "Match another type of record (in collection at `search-coll-ref`) against
@@ -14,11 +20,11 @@
         search-coll (var-get search-coll-ref)
         source-to-new-match-fn (match-p/match-same-fn source-record)
         matching-recs (source-to-new-match-fn source-record search-coll)
-        single-matching-rec (utils/if-1-only matching-recs)]
+        single-matching-rec (if-1-only matching-recs)]
     (when single-matching-rec
       (let [back-match-fn (match-p/match-same-fn single-matching-rec)
             matching-recs-reverse-direction (back-match-fn single-matching-rec
                                                            source-coll)]
-        (when (utils/if-1-only matching-recs-reverse-direction)
+        (when (if-1-only matching-recs-reverse-direction)
           single-matching-rec)))))
 

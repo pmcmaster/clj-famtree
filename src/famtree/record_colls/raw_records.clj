@@ -1,19 +1,28 @@
-(ns famtree.records.raw-collections
+(ns famtree.record-colls.raw-records
   "Unfiltered records, from the load functions, for each record type"
-  (:require [famtree.records.core :use [map->BirthRec
-                                        map->DeathRec
-                                        map->CensusRec
-                                        map->MarriageRec
-                                        map->MarriageSpouseRec]]
+  (:require [famtree.records :use [map->BirthRec
+                                   map->DeathRec
+                                   map->CensusRec
+                                   map->MarriageRec]]
             [famtree.load :as load]))
 
 (def births (map map->BirthRec (load/data-for-type "births")))
 (def deaths (map map->DeathRec (load/data-for-type "deaths")))
 (def all-census (map map->CensusRec (load/data-for-type "census")))
-
 (def marriages (map map->MarriageRec (load/data-for-type "marriages")))
-(def marriages-spouse (map map->MarriageSpouseRec
-                           (load/data-for-type "marriages")))
+
+(defn swap-spouse-partner
+  "Switch the spouse- names to the other fields and vice-versa"
+  [data-map]
+  (-> data-map
+      (assoc :surname (:spouse-surname data-map))
+      (assoc :forename (:spouse-forename data-map))
+      (assoc :spouse-surname (:surname data-map))
+      (assoc :spouse-forename (:forename data-map))))
+
+(def marriages-spouse (->> (load/data-for-type "marriages")
+                           (map swap-spouse-partner)
+                           (map map->MarriageRec)))
 
 (def all-collection-refs
   "All references to each of the available collections"

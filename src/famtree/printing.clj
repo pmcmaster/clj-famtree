@@ -2,17 +2,15 @@
   "Functions for outputting progress at various stages of matching")
 
 (defn print-stats
-  "Print out details of info referenced by data-symbol"
+  "Print out count of records referenced by data-symbol"
   [data-symbol]
-  (let [data (var-get data-symbol)]
-    (println data-symbol (count data) "records")))
+  (println data-symbol (count (var-get data-symbol)) "records"))
 
 (defn print-record-summary
   "Prints out counts of the loaded records"
   [record-collection-refs]
   (println "Loaded:")
-  (doseq [record-ref record-collection-refs]
-    (print-stats record-ref)))
+  (doseq [record-ref record-collection-refs] (print-stats record-ref)))
 
 ;; General display of records
 
@@ -36,8 +34,7 @@
 (defn print-records
   "Prints out records, one per-line"
   [records]
-  (doseq [record records]
-    (println record)))
+  (doseq [record records] (println record)))
 
 ;; Collated results (a set containing a set of records per-person)
 

@@ -6,8 +6,6 @@
   (est-birth-year-range [this]
                         "Estimated earliest and latest birth year from info
                         in a record")
-  (match-on-forename [this other-forename]
-                     "Does this record match based other-forename")
   (match-on-surname [this other-forename year]
                     "At `year` does `this` record's :surname match
                     `other-surname`")
