@@ -25,7 +25,8 @@
                           source-rec dest-rec
                           set-of-record-sets)]
     (->> (conj existing-set source-rec dest-rec)
-     (update-results-set set-of-record-sets existing-set)) 
+         (update-results-set set-of-record-sets existing-set)) 
+    ;; No existing record for either - add as new set
     (conj set-of-record-sets (hash-set source-rec dest-rec))))
 
 (defn pairs-to-sets

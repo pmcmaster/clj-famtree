@@ -5,10 +5,12 @@
 
 (defn if-1-only
   "Return the element in `coll` if there is only one
-  Returns nil if there are zero or > 1 items"
+  Returns nil if there are zero or > 1 items.
+  Does not use count so it's not necessary to realise the whole collection."
   [coll]
-  (if (= 1 (count coll))
-    (first coll)))
+  (when-let [elem1 (first coll)]
+    (when-not (second coll)
+      elem1)))
 
 (defn find-single-match
   "Match another type of record (in collection at `search-coll-ref`) against

@@ -7,8 +7,18 @@
                  [org.clojure/data.csv "1.1.1"]]
   :main ^:skip-aot famtree.core
   :target-path "target/%s"
-  :profiles {:profile {:dependencies [[com.clojure-goes-fast/clj-async-profiler "2.0.0-beta1"]]
-                       :jvm-opts ["-Djdk.attach.allowAttachSelf"]}
+  :profiles {:profiling 
+             {:dependencies
+              [[com.clojure-goes-fast/clj-async-profiler "2.0.0-beta1"]]
+              :jvm-opts ["-Djdk.attach.allowAttachSelf"]}
+
+
              :uberjar {:aot :all
                        :jvm-opts ["-Dclojure.compiler.direct-linking=true"]}})
 
+;; lein with-profile +profiling
+(comment 
+  (require '[clj-async-profiler.core :as prof])
+  (prof/profile (-main))             
+  (prof/serve-ui 8080)
+  )
