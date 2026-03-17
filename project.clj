@@ -17,8 +17,8 @@
                        :jvm-opts ["-Dclojure.compiler.direct-linking=true"]}})
 
 ;; lein with-profile +profiling
-(comment 
-  (require '[clj-async-profiler.core :as prof])
-  (prof/profile (-main))             
-  (prof/serve-ui 8080)
-  )
+; (comment 
+;   (require '[clj-async-profiler.core :as prof])
+;   (prof/profile (-main))             
+;   (prof/serve-ui 8080)
+;   )
