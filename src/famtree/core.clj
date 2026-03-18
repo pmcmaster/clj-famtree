@@ -5,6 +5,8 @@
             [famtree.printing :as p]
             [famtree.match.collate-same :as collate-same]
             [famtree.match.same-person :as match-same]
+            [famtree.link.census-same-ref :as census-same-ref]
+            [famtree.link.child-to-marriage :as child-to-mar]
             [famtree.problems.contradictions :as contra])
   (:gen-class))
 
@@ -18,9 +20,17 @@
 (defn -main
   [& args]
   (p/print-record-summary rec-colls/all-collection-refs)
-  (let [results (match-and-collate)]
-    (p/print-collated-results results)
-    (doseq [each-set results]
-      (contra/check-set each-set))
-    (println "Problems:" @contra/problem-count)))
+  ; (let [results (match-and-collate)]
+  ;   (p/print-collated-results results)
+  ;   (doseq [each-set results]
+  ;     (contra/check-set each-set))
+  ;   (println "Problems:" @contra/problem-count)
+  ;   (doseq [each-set results]
+  ;     (child-to-mar/find-parents each-set))
+  ;   (println "Possible people with parents:" @child-to-mar/parent-count)
+    (census-same-ref/show-households)
+    (census-same-ref/show-county-city)
+    ; ))
+    )
+
 

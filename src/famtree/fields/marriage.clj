@@ -27,6 +27,15 @@
    (fields/first-word-from-field :spouse-forename marriage-rec)
    (:spouse-surname marriage-rec)])
 
+(defn female-surname-from-marriage
+  [marriage-rec]
+  (let [person-gender (gender/infer-gender-from-forename-pair
+                        (:forename marriage-rec)
+                        (:spouse-forename marriage-rec))]
+    (cond
+      (= person-gender gender/female) (:surname marriage-rec)
+      (= person-gender gender/male) (:spouse-surname marriage-rec))))
+
 (defn matches-surname-at-date
   "Does the data for this marriage (surnames and year) match up with the
   `event-year` and `event-surname`"
