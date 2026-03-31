@@ -7,8 +7,7 @@
             [famtree.match.same-person :as match-same]
             [famtree.link.census-same-ref :as census-same-ref]
             [famtree.link.child-to-marriage :as child-to-mar]
-            [famtree.problems.contradictions :as contra])
-  (:gen-class))
+            [famtree.problems.contradictions :as contra]))
 
 (defn match-and-collate
  "Match records together and collate them into groups per-person" 
