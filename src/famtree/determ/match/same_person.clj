@@ -1,5 +1,5 @@
-(ns famtree.match.same-person
-  (:require [famtree.match.core :as match]
+(ns famtree.determ.match.same-person
+  (:require [famtree.determ.match.core :as match]
             [famtree.printing :as p]))
 
 ;; Match records together for the same person.

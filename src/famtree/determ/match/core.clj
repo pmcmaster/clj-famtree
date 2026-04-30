@@ -1,7 +1,7 @@
-(ns famtree.match.core
+(ns famtree.determ.match.core
   "Core matching functions"
-  (:require [famtree.match.protocols :as match-p]
-            [famtree.match.against]))
+  (:require [famtree.determ.match.protocols :as match-p]
+            [famtree.determ.match.against]))
 
 (defn if-1-only
   "Return the element in `coll` if there is only one

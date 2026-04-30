@@ -3,10 +3,10 @@
   Runs the main matching process and triggers output of results"
   (:require [famtree.record-colls.main-records :as rec-colls]
             [famtree.printing :as p]
-            [famtree.match.collate-same :as collate-same]
-            [famtree.match.same-person :as match-same]
-            [famtree.link.census-same-ref :as census-same-ref]
-            [famtree.link.child-to-marriage :as child-to-mar]
+            [famtree.determ.match.collate-same :as collate-same]
+            [famtree.determ.match.same-person :as match-same]
+            [famtree.determ.link.census-same-ref :as census-same-ref]
+            [famtree.determ.link.child-to-marriage :as child-to-mar]
             [famtree.problems.contradictions :as contra]))
 
 (defn match-and-collate

@@ -1,4 +1,4 @@
-(ns famtree.match.protocols
+(ns famtree.determ.match.protocols
   "Protocols for functions used when matching records together.")
 
 (defprotocol MatchSamePerson

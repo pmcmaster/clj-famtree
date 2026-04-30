@@ -1,4 +1,4 @@
-(ns famtree.link.child-to-marriage
+(ns famtree.determ.link.child-to-marriage
   (:require [famtree.fields.marriage :as marriage]
             [famtree.printing :as p]
             [famtree.record-colls.main-records :as rec-colls]))

@@ -1,7 +1,7 @@
-(ns famtree.match.against 
+(ns famtree.determ.match.against 
   "Functions to match a type of record against another record"
-  (:require [famtree.match.protocols :as match-p]
-            [famtree.match.same]
+  (:require [famtree.determ.match.protocols :as match-p]
+            [famtree.determ.match.same]
             [famtree.fields.names :as names]
             [famtree.fields.marriage :as marriage]
             [famtree.fields.age-year :as age-year]

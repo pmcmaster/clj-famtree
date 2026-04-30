@@ -1,4 +1,4 @@
-(ns famtree.match.same
+(ns famtree.determ.match.same
   "Implementation of functions to match a record against another for the
   same person (e.g., birth and death records for one person)."
   (:require [famtree.records]
@@ -7,7 +7,7 @@
             [famtree.fields.basic :as fields]
             [famtree.fields.marriage :as marriage]
             [famtree.fields.gender :as gender]
-            [famtree.match.protocols :as match-p])
+            [famtree.determ.match.protocols :as match-p])
   (:import [famtree.records
             BirthRec DeathRec MarriageRec CensusRec]))
 

@@ -1,4 +1,4 @@
-(ns famtree.link.census-same-ref
+(ns famtree.determ.link.census-same-ref
   (:require [famtree.printing :as p]
             [famtree.fields.names :as names]
             [famtree.record-colls.main-records :as rec-colls]
