@@ -1,7 +1,8 @@
 (ns famtree.core
   "Main entry point for project
   Runs the main matching process and triggers output of results"
-  (:require [famtree.determ.core :as determ]))
+  (:require [famtree.determ.core :as determ]
+            [famtree.probab.match :as probab]))
 
 (defn households
   "Entry point: Show determinstic linking of possible households"
@@ -16,4 +17,8 @@
   [& args]
   (determ/link-same-and-parents))
 
-
+(defn prob-match-census
+  "Entry point: Probabilistically match some sample census records"
+  ; clojure -X famtree.core/prob-match-census
+  [& args]
+  (probab/match-census))
