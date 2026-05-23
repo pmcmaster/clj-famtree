@@ -38,6 +38,7 @@
     :match-prob 0.4
     :unmatch-prob 0.05}])
 
+;; Uses Felligi-Sunter method to match records.
 ;; Details well-explained in talk and linked resources at:
 ;; https://github.com/oakmac/record-linking-talk/tree/master
 

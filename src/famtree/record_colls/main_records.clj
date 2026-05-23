@@ -33,12 +33,16 @@
   One collection per-census-year."
   (->> (var-get #'raw-colls/all-census)
        (group-by :year)
-       (map create-census-def-for-year)))
+       (mapv create-census-def-for-year)))
 
 (def all-collection-refs
   "A collection of all record lists"
   (concat [#'births #'deaths #'marriages #'marriages-spouse]
           census-by-year-syms))
+
+(def all-records
+  "All records of all types in one big flat collection"
+  (apply concat (map var-get all-collection-refs)))
 
 (defn rand-rec-from-coll-ref
   "Returns a random record from the collection referenced"
