@@ -35,10 +35,18 @@
        (group-by :year)
        (mapv create-census-def-for-year)))
 
+(def all-collection-refs-except-census
+  "A collection of all record lists except the census ones"
+  [#'births #'deaths #'marriages #'marriages-spouse])
+
 (def all-collection-refs
   "A collection of all record lists"
-  (concat [#'births #'deaths #'marriages #'marriages-spouse]
+  (concat all-collection-refs-except-census
           census-by-year-syms))
+
+(def all-records-except-census
+  "All records of all types (except census) in one bit flat collection"
+  (apply concat (map var-get all-collection-refs-except-census)))
 
 (def all-records
   "All records of all types in one big flat collection"

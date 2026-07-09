@@ -29,17 +29,12 @@
     [:form
      (lat-lng-fields)]))
 
-(defn script-position
-  "Script for defaults and interaction with map"
-  [lat, lng, zoom]
+(defn script-marker-on-click
+  "Script snippet to add a pin on-click in on the map element"
+  []
   (h/html
-    [:script {:type "text/javascript" }
-     "var map = L.map('map').setView([" lat "," lng "]," zoom ");
-     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-     { maxZoom: 19,
-     attribution: '&copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>'}
-     ).addTo(map);
-
+    [:script {:type "text/javascript"}
+     "
      var marker;
      map.on('click', function(e) {
      if(marker)
@@ -50,8 +45,19 @@
      marker = L.marker(e.latlng).addTo(map);
      });"]))
 
+(defn script-position
+  "Script for defaults and interaction with map"
+  [lat, lng, zoom]
+  (h/html
+    [:script {:type "text/javascript" }
+     "var map = L.map('map').setView([" lat "," lng "]," zoom ");
+     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+     { maxZoom: 19,
+     attribution: '&copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>'}
+     ).addTo(map);"]))
+
 (defn script-default
   "Script for defaults and interaction with map"
   []
-  (script-position 56.720, -4.1, 6))
+  (script-position 56.72, -4.1, 7))
 

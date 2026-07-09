@@ -30,12 +30,13 @@
 (defn main-page []
   (h/html
     [:head
-     [:title "Foo title"]
+     [:title "FamTree Main Page"]
      [:script {:src "/htmx.min.js"}]]
     [:body
-     [:h1 "Famtree"]
+     [:h1 "FamTree Main Page"]
      [:p [:a {:href "/reset"} "Reset Data"]]
      [:p [:a {:href "/locations"} "Locations"]]
+     [:p [:a {:href "/year/1855"} "By Year"] " (defaults to 1855)"]
      (for [rec-coll (sort-by str rec-colls/all-collection-refs)]
        (let [short-coll (last (str/split (str rec-coll) #"/"))]  
         [:p [:a {:href (str "/coll/" short-coll)} rec-coll]]))]))
@@ -86,12 +87,17 @@
      (coll-list-content rec-coll)
     ]))
 
+(defn loc-name-for-rec
+  "Standardised location name for a record"
+  [rec]
+  (str (:rd-name rec)
+       " / "
+       (:county-city rec "NONE")))
+
 (defn unique-locations
   "Sorted set (alphabetically) of all unique locations in the current records"
   []
-  (let [all-locs (map #(str (:rd-name %)
-                            " / "
-                            (:county-city % "NONE"))
+  (let [all-locs (map loc-name-for-rec
                       rec-colls/all-records)
         locs-set (apply sorted-set all-locs)]
     locs-set))
@@ -137,7 +143,7 @@
         (for [other-loc same-start-locs]
           [:li [:input {:name (str "loc|" (hash other-loc))
                         :type "checkbox"
-                        :checked true}
+                        :checked false}
                 other-loc]
            (if-let [coord (get @geolocate/location-info other-loc)]
              (str " " coord))
@@ -148,7 +154,8 @@
             "Search"]])]
        [:button {:type "submit"} "Update location"]]
       [:p [:a {:href "/locations"} "All Locations"]]
-      (mapping/script-default)])))
+      (mapping/script-default)
+      (mapping/script-marker-on-click)])))
 
 (defn locations-without-geo
   []
@@ -167,12 +174,8 @@
   [show-all?]
   (let [all-locs (unique-locations)]
     (h/html
-     [:head [:title "Locations"]
-      (mapping/headers)]
+     [:head [:title "Locations"]]
      [:body 
-      [:div {:id "map"}]
-      (mapping/lat-lng-form)
-      (mapping/script-default)
       [:p (str (count all-locs) " locations (" (count (locations-without-geo))
                " with no location set)")]
       [:ul
@@ -182,6 +185,31 @@
          (let [loc-hash (hash loc)]
            [:li
             [:a {:href (str "/location/" loc-hash)} loc]]))]])))
+
+(defn location-for-year
+  "Show all location with activity for a given year, and a type of record"
+  [year-str record-types]
+  (let [year (Integer/parseInt year-str)
+        all-recs-for-year (filter #(= (:year %) year) rec-colls/all-records-except-census)
+        all-locs (group-by loc-name-for-rec all-recs-for-year)
+        all-geolocs (map #(get @geolocate/location-info %) (keys all-locs))]
+    (h/html
+      [:head [:title "Locations for " (str year)]
+       (mapping/headers)]
+      [:body [:h1 "Locations for " (str year)]
+       [:p
+        [:a {:href (str "/year/" (dec year))} "Prev"]
+        " | "
+        [:a {:href (str "/year/" (inc year))} "Next"]]
+       [:div {:id "map"}]
+       (mapping/script-default)
+       [:script {:type "text/javascript"}
+        (for [loc all-geolocs
+              :when (and (:lat loc) (:lng loc))]
+          (str "L.marker([" (:lat loc) "," (:lng loc) "]).addTo(map);\n"))]
+       (for [each-rec all-recs-for-year]
+        (basic-row-with-link each-rec))
+       ])))
 
 (defn loc-param-to-hash
   "Parse location param to hash str"
@@ -210,6 +238,7 @@
   (GET "/foo.txt" [] (handler-response))
   (GET "/location/:loc-hash" [loc-hash] (location-page loc-hash))
   (GET "/locations" [] (locations-page false))
+  (GET "/year/:year" [year] (location-for-year year :all))
   (GET "/random-location" [] (random-location-page))
   (POST "/update-location" req (update-location req) (resp/redirect "/random-location"))
   (GET "/record/:rec-hash" [rec-hash] (record-page rec-hash))
