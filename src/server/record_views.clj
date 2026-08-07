@@ -42,3 +42,10 @@
   (basic-row [this] (str/join basic-sep ["M" (:year this) (:forename this) (:surname this)]))
   (detail-page [this] (field-detail-page this "Marriage" [:spouse-forename :spouse-surname])))
 
+(defn basic-row-with-link
+  "Basic info for a row with a link to detail for the record"
+  [record]
+    [:p (basic-row record)
+    " "
+    [:a {:href (str "/record/" (hash record))} "Details"]])
+

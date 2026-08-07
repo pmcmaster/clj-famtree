@@ -1,6 +1,9 @@
 (ns famtree.geolocate
   (:require [clojure.java.io :as io]))
 
+;; Functions which relate to a geographical lat/long location for a place name
+;; These are saved to disk and stored during program execution in an atom
+
 (def location-filename
   "data/locations.txt")
 
@@ -30,4 +33,8 @@
              locations)))
   (write-location-data-to-file @location-info))
 
-
+(defn has-geoloc?
+  "Predicate returns true when place named `location` has associated
+  geolocation info"
+  [location]
+  (contains? @location-info location))

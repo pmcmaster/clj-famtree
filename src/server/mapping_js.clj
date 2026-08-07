@@ -1,5 +1,8 @@
-(ns server.mapping
+(ns server.mapping-js
   (:require [hiccup.core :as h]))
+
+;; Produces <script> content for interacting with a map (as in map of the
+;; world) UI
 
 (defn headers
   "Headers for including a small map UI"
