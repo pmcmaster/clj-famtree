@@ -4,7 +4,8 @@
             [server.record-views :as rec-views]
             [famtree.places :as places]
             [server.location :as location]
-            [server.mapping-js :as mapping-js]))
+            [server.mapping-js :as mapping-js]
+            [famtree.probab.match :as prob-match]))
 
 ;; Basic display of info relation to a single record
 
@@ -27,8 +28,18 @@
   "List what records are already linked with this one."
   [root-rec]
   (h/html
-    [:h1 "Linked records"]
+    [:h2 "Linked records"]
     [:p "None"]))
+
+(defn match-scores
+  "Display match scores for this record against another record type"
+  [record other-rec-coll]
+  (let [match-results (prob-match/match-against record other-rec-coll)
+        top-6 (take 6 match-results)]
+    (h/html
+      (for [[weight other-rec] top-6]
+        (h/html
+          [:p (format "%.3f" weight) " &mdash; " (rec-views/basic-row other-rec)])))))
 
 (defn record-page
   "Page for a single record"
@@ -41,6 +52,14 @@
        (if-let [location (places/loc-name-for-rec rec)]
          (h/html [:p "Normalised location name: " location]))
        (linked-records rec)
+       [:h2 "Scores against births"]
+       (match-scores rec rec-colls/births)
+       [:h2 "Scores against deaths"]
+       (match-scores rec rec-colls/deaths)
+       [:h2 "Scores against marriages"]
+       (match-scores rec rec-colls/marriages)
+       [:h2 "Scores against marriages-spouse"]
+       (match-scores rec rec-colls/marriages-spouse)
        [:div {:id "map"}]
        (if-let [geoloc (location/geoloc-for-record rec)]
          (h/html

@@ -25,9 +25,9 @@
   [{:match-fn (partial match-field :forename)
     :match-prob 0.95 
     :unmatch-prob 0.89} ;; TODO: Dynamic unmatch prob based on the name itself?
-   {:match-fn age-matches?
-    :match-prob 0.8
-    :unmatch-prob 0.4}
+   ; {:match-fn age-matches?
+   ;  :match-prob 0.8
+   ;  :unmatch-prob 0.4}
    {:match-fn (partial match-field :gender)
     :match-prob 0.99
     :unmatch-prob 0.5}
@@ -71,6 +71,21 @@
     0
     field-probs))
 
+(defn match-result
+  "Returns a tuple of:
+  [match-score matched-record]"
+  [source-rec target-rec]
+  [(match-score source-rec target-rec) target-rec])
+
+(defn match-against
+  "Match `source-rec` against records in `target-coll`.
+  Returns a list of tuples with key of the match score and value of the
+  matched record. These are sorted, so highest weights are first"
+  [source-rec target-coll]
+  (let [targets-with-weights (map (partial match-result source-rec)
+                                  target-coll)]
+    (sort-by first > targets-with-weights)))
+
 (defn match-census
   "Match two sets of census records against each other probabilistically
   Prints out the best (and worst) matches"
@@ -81,14 +96,10 @@
     (doseq [source-rec source-coll]
       (println)
       (println "Source:" source-rec)
-      (let [targets-with-weights (map (fn [target-rec]
-                                        [(match-score source-rec target-rec)
-                                         target-rec])
-                                      target-coll)
-            by-weight (sort-by first > targets-with-weights)]
-        (doseq [[weight rec] (take 6 by-weight)]
+      (let [targets-with-weights (match-against source-rec target-coll)]
+        (doseq [[weight rec] (take 6 targets-with-weights)]
           (println weight rec))
         (println "...")
-        (doseq [[weight rec] (take-last 2 by-weight)]
+        (doseq [[weight rec] (take-last 2 targets-with-weights)]
           (println weight rec))))))
 
