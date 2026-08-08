@@ -10,6 +10,7 @@
             [server.pages.mark-location :as mark-loc-page]
             [server.pages.link-records :as link-records]
             [server.pages.location-list :as loc-list-pages]
+            [server.location-param :as loc-param]
             [server.location :as location])
   (:use compojure.core
         [hiccup.middleware :only (wrap-base-url)]))
@@ -24,8 +25,9 @@
   (GET "/year/:year" [year] (loc-list-pages/location-for-year year :all))
   (GET "/random-location" [] (mark-loc-page/random-location-page))
   (POST "/update-location" req
-        (location/update-location req)
-        (resp/redirect "/random-location"))
+        (let [updated-data (loc-param/data-for-update req)]
+          (location/update-location updated-data)
+          (resp/redirect "/random-location")))
   (GET "/record/:rec-hash" [rec-hash] (record-page/record-page rec-hash))
   (GET "/coll/:coll-name" [coll-name] (rec-coll-page/content coll-name))
   (GET "/set-link/:rec-hash/to/:coll-name" [rec-hash coll-name]

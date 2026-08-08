@@ -2,24 +2,17 @@
   (:require
     [famtree.record-colls.main-records :as rec-colls]
     [famtree.places :as places]
-    [famtree.geolocate :as geolocate]
-    [server.location-param :as loc-param]
-    [clojure.string :as str]))
+    [famtree.geolocate :as geolocate]))
 
 ;; Common functions for listing locations, or updating info relating to a
 ;; location.
 
 (defn update-location
   "Update lat/long for one or more locations"
-  [req]
-  (let [{params :form-params} req
-        lat (get params "lat")
-        lng (get params "lng")
-        locs (filter loc-param/is-loc-param? (keys params))
-        loc-names (map loc-param/loc-param-to-name locs)]
-    (if (not-any? empty? [lat lng loc-names]) 
-      (geolocate/add-lat-lng-to-locations
-        {:lat lat :lng lng} loc-names))))
+  [[{:keys [lat lng]} loc-names]]
+  (if (not-any? empty? [lat lng loc-names]) 
+    (geolocate/add-lat-lng-to-locations
+      {:lat lat :lng lng} loc-names)))
 
 (defn locations-without-geo
   "List of locations which do not have geolocation data"
@@ -36,10 +29,12 @@
   (let [all-recs-for-year (filter
                             #(= (:year %) year)
                             rec-colls/all-records-except-census)
-        ;; TODO: Use a set and/or 'into' here, as we don't access
-        ;; the grouped records, only the keys
-        all-locs (group-by places/loc-name-for-rec all-recs-for-year)
-        all-geolocs (map #(get @geolocate/location-info %) (keys all-locs))]
+        all-locs (into {} places/loc-name-for-rec all-recs-for-year)
+        all-geolocs (map #(get @geolocate/location-info %) all-locs)]
     {:locs all-geolocs
      :recs all-recs-for-year}))
 
+(defn geoloc-for-record
+  "Returns geolocation for a record"
+  [record]
+  (get @geolocate/location-info (places/loc-name-for-rec record)))

@@ -44,10 +44,7 @@
         [:a {:href (str "/year/" (inc year))} "Next"]]
        [:div {:id "map"}]
        (mapping-js/script-default)
-       [:script {:type "text/javascript"}
-        (for [loc all-locs-for-year
-              :when (and (:lat loc) (:lng loc))]
-          (str "L.marker([" (:lat loc) "," (:lng loc) "]).addTo(map);\n"))]
+       (mapping-js/script-add-map-pins all-locs-for-year)
        (for [each-rec all-recs-for-year]
         (rec-views/basic-row-with-link each-rec))])))
 

@@ -1,26 +1,49 @@
 (ns server.pages.record
   (:require [hiccup.core :as h]
             [famtree.record-colls.main-records :as rec-colls]
-            [server.record-views :as rec-views]))
+            [server.record-views :as rec-views]
+            [famtree.places :as places]
+            [server.location :as location]
+            [server.mapping-js :as mapping-js]))
 
 ;; Basic display of info relation to a single record
 
-(defn record-page-content
-  "Details for a particular record, looked up based on its hash in a horribly
-  inefficient way"
+(defn record-from-hash
+  "Look-up record based on its hash. Returns the found record, or nil if no
+  match"
   [rec-hash-str]
   (if-let [rec-hash (Integer/parseInt rec-hash-str)]
-    (if-let [found-rec (first
-                         (filter
-                           #(= rec-hash (hash %))
-                           rec-colls/all-records))]
-      (rec-views/detail-page found-rec)
-      (str "No rec matched hash " rec-hash))))
+    (first (filter #(= rec-hash (hash %))
+                   rec-colls/all-records))))
+
+(defn record-page-content
+  "Details for a particular record, looked up based on its hash"
+  [rec-hash-str]
+  (if-let [found-rec (record-from-hash rec-hash-str)]
+    (rec-views/detail-page found-rec)
+    (str "No rec matched hash " rec-hash-str)))
+
+(defn linked-records
+  "List what records are already linked with this one."
+  [root-rec]
+  (h/html
+    [:h1 "Linked records"]
+    [:p "None"]))
 
 (defn record-page
   "Page for a single record"
   [rec-hash-str]
-  (h/html
-    [:head [:title "Record detail"]]
-    [:body (record-page-content rec-hash-str)]))
+  (if-let [rec (record-from-hash rec-hash-str)]
+    (h/html
+      [:head [:title "Record detail"]
+       (mapping-js/headers-small)]
+      [:body (record-page-content rec-hash-str)
+       (if-let [location (places/loc-name-for-rec rec)]
+         (h/html [:p "Normalised location name: " location]))
+       (linked-records rec)
+       [:div {:id "map"}]
+       (if-let [geoloc (location/geoloc-for-record rec)]
+         (h/html
+           (mapping-js/script-small)
+           (mapping-js/script-add-map-pins [geoloc])))])))
 

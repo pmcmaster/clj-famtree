@@ -37,3 +37,16 @@
   "Parameter name for `location`"
   [location]
   (str loc-param-tag "|" (hash location)))
+
+(defn data-for-update
+  "Parse out data for updating the lat/long associated with some locations
+  Data arrives as one single lat/long, and a list of locations to
+  associate with that position.
+  Return is:
+  [{:lat 2.3 :lng :34.5} [Loc1 Loc2 Loc3...]"
+  [req]
+  (let [{params :form-params} req
+        {:strs [lat lng]} params
+        loc-params (filter is-loc-param? (keys params))
+        loc-names (map loc-param-to-name loc-params)]
+    [{:lat lat :lng lng} loc-names]))
