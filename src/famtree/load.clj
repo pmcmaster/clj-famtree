@@ -3,7 +3,8 @@
   Does not actually result in Records at this point"
   (:require [clojure.string :as str]
             [clojure.java.io :as io]
-            [clojure.data.csv :as csv]))
+            [clojure.data.csv :as csv]
+            [clojure.spec.alpha :as s]))
 
 (defn rows-for-record-type 
   "Read the raw CSV from a file named for record-type"
@@ -71,4 +72,8 @@
   "The properly formatted map of data for a given record-type"
   [record-type]
   (data-as-map (rows-for-record-type record-type)))
+
+(s/fdef data-for-type
+        :args (s/cat :s string?)
+        :ret (s/coll-of :famtree.record-specs/any-record))
 
