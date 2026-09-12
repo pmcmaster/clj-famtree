@@ -1,5 +1,5 @@
 (ns famtree.fields.basic-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest is]]
             [famtree.fields.basic :as f]))
 
 (deftest no-data?-test

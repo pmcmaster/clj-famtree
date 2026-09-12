@@ -24,7 +24,7 @@
   "Estimates a birth year range from an `age` and a `record-year`
   Birth year may be one year further behind than the simple subtraction"
   [age record-year]
-  (if-not (some nil? [age record-year])
+  (when-not (some nil? [age record-year])
     (let [calc-birth-year (- record-year age)]
       [(dec calc-birth-year) calc-birth-year])))
 

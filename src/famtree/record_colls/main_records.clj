@@ -2,7 +2,6 @@
   "Lists of records, organised by record type
   There is some initial filtering done on some of the collections"
   (:require [famtree.record-colls.raw-records :as raw-colls]
-            [famtree.fields.gender :as gender]
             [famtree.fields.marriage :as marriage]))
 
 (def births (var-get #'raw-colls/births))
@@ -27,6 +26,11 @@
   [[year recs]]
   (intern 'famtree.record-colls.main-records
           (symbol (str "census-" year)) recs))
+
+;; Declared here to avoid lint warnings in some hard-coded references
+;; to these collections. Actual data is defined dynamically below.
+(declare census-1911)
+(declare census-1921)
 
 (def census-by-year-syms
   "List of the dynamically-created record collections for census.

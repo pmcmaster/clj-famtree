@@ -1,6 +1,10 @@
 (ns famtree.fields.gender-test
-  (:require [clojure.test :refer :all]
-            [famtree.fields.gender :refer :all]))
+  (:require [clojure.test :refer [deftest is]]
+            [famtree.fields.gender :refer [first-names-by-gender
+                                           female-forename?
+                                           male-forename?
+                                           gender-for-name
+                                           infer-gender-from-forename-pair]]))
 
 ;; TODO: Test assertions are tightly tied to the data set used.
 ;; They should not be.

@@ -40,13 +40,13 @@
 (defn anything-before-birth-record
   "Are there any records before the birth record in `rec-col`"
   [rec-coll]
-  (if-let [birth-rec (one-record-of-type-in BirthRec rec-coll)]
+  (when-let [birth-rec (one-record-of-type-in BirthRec rec-coll)]
     (some #(< (:year %) (:year birth-rec)) rec-coll)))
 
 (defn anything-after-death-record
   "Are there any records after the death record in `rec-col`"
   [rec-coll]
-  (if-let [death-rec (one-record-of-type-in DeathRec rec-coll)]
+  (when-let [death-rec (one-record-of-type-in DeathRec rec-coll)]
     (some #(> (:year %) (:year death-rec)) rec-coll)))
 
 ;; TODO: Non-sequential age for census
@@ -70,19 +70,19 @@
   (println)
   (println "==========")
   (p/print-details-for-person-set rec-set)
-  (do (check-problem (partial multiple-recs-of-type BirthRec)
-                     "Multple birth recs"
-                     rec-set)
-      (check-problem (partial multiple-recs-of-type DeathRec)
-                     "Multiple death recs"
-                     rec-set)
-      (check-problem anything-before-birth-record
-                     "Records before birth rec"
-                     rec-set)
-      (check-problem anything-after-death-record
-                     "Records after death-rec"
-                     rec-set)
-      (check-problem multiple-entries-for-one-census-year
-                     "Same census year"
-                     rec-set)))
+  (check-problem (partial multiple-recs-of-type BirthRec)
+                    "Multple birth recs"
+                    rec-set)
+  (check-problem (partial multiple-recs-of-type DeathRec)
+                 "Multiple death recs"
+                 rec-set)
+  (check-problem anything-before-birth-record
+                 "Records before birth rec"
+                 rec-set)
+  (check-problem anything-after-death-record
+                 "Records after death-rec"
+                 rec-set)
+  (check-problem multiple-entries-for-one-census-year
+                 "Same census year"
+                 rec-set))
       

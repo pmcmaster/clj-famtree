@@ -1,5 +1,5 @@
 (ns famtree.fields.marriage-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest is]]
             [famtree.fields.marriage :as marriage]))
 
 (deftest surnames-before-after-test

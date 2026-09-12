@@ -1,5 +1,5 @@
 (ns famtree.load-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest is testing]]
             [famtree.load :as l]))
 
 (deftest field-name-to-keyword-test

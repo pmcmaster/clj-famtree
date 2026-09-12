@@ -1,5 +1,5 @@
 (ns famtree.fields.names-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest is]]
             [famtree.fields.names :as n]))
 
 ;; TODO: Assertions here are specific to current data used
@@ -10,8 +10,8 @@
          "SMITH"))
   (is (= (n/first-part-of-hyphenated-name "SMITH")
          "SMITH"))
-  (is (= (n/first-part-of-hyphenated-name "SMITH JONES"))
-      "SMITH")
+  (is (= (n/first-part-of-hyphenated-name "SMITH JONES")
+         "SMITH"))
   (is (nil? (n/first-part-of-hyphenated-name nil)))
   (is (nil? (n/first-part-of-hyphenated-name "-----"))))
 

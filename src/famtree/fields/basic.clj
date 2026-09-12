@@ -8,7 +8,7 @@
   "Returns field-content if it matches empty field marker which is something
   like '-----'"
   [field-content]
-  (if (string? field-content)
+  (when (string? field-content)
     (re-matches #"-+" field-content)))
 
 (defn first-word-from-field

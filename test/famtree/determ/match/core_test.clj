@@ -1,6 +1,6 @@
 (ns famtree.determ.match.core-test
-  (:require [clojure.test :refer :all]
-            [famtree.determ.match.core :refer :all]))
+  (:require [clojure.test :refer [deftest is]]
+            [famtree.determ.match.core :refer [if-1-only]]))
 
 (deftest if-1-only-test
   (is (= :a (if-1-only [:a])))

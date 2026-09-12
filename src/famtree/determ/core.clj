@@ -28,7 +28,7 @@
   "Entry point: Show determinstic linking of possible households. Households
   which are linked are intended to be the same household across different
   census years."
-  [& args]
+  [& _args]
   (p/print-record-summary rec-colls/all-collection-refs)
   (census-same-ref/show-households)
   (census-same-ref/show-county-city))
@@ -37,7 +37,7 @@
   "Entry point: Determinstically link together records which relate to the
   same person. Show summary of contradiatory situations. Basic attempt at
   linking children to parents"
-  [& args]
+  [& _args]
   (p/print-record-summary rec-colls/all-collection-refs)
    (let [results (match-and-collate)]
      (p/print-collated-results results)

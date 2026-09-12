@@ -13,7 +13,7 @@
 (defn update-location
   "Update lat/long for one or more locations"
   [[{:keys [lat lng]} loc-names]]
-  (if (not-any? empty? [lat lng loc-names]) 
+  (when (not-any? empty? [lat lng loc-names]) 
     (geolocate/add-lat-lng-to-locations
       {:lat lat :lng lng} loc-names)))
 

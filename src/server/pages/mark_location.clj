@@ -40,7 +40,7 @@
                         :type "checkbox"
                         :checked false}
                 other-loc]
-           (if-let [coord (get @geolocate/location-info other-loc)]
+           (when-let [coord (get @geolocate/location-info other-loc)]
              (str " " coord))
            " "
            [:a {:href

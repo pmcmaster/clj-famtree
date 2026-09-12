@@ -1,12 +1,12 @@
 (ns famtree.determ.match.against-test
-  (:require [clojure.test :refer :all]
-            [famtree.records :use [->BirthRec
-                                   ->DeathRec
-                                   ->CensusRec
-                                   ->MarriageRec]]
+  (:require [clojure.test :refer [deftest is]]
             [famtree.determ.match.protocols :as match-p]
             [famtree.determ.match.against]
-            [famtree.fields.names]))
+            [famtree.fields.names]
+            [famtree.records :refer [->BirthRec
+                                     ->DeathRec
+                                     ;; ->CensusRec
+                                     ->MarriageRec]]))
 
 (def core-surnames-mock
   "Use only this as the 'core surname' for testing"

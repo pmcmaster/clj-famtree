@@ -15,7 +15,7 @@
 (defn households
   "Entry point: Show determinstic linking of possible households"
   ; clojure -X famtree.core/households
-  [& args]
+  [& _args]
   (determ/households))
 
 (defn link-same-and-parents
@@ -23,11 +23,11 @@
   person Show summary of contradiatory situations. Basic attempt at linking
   children to parents in the 'dumbest' way possible"
   ; clojure -X famtree.core/link-same-and-parents
-  [& args]
+  [& _args]
   (determ/link-same-and-parents))
 
 (defn prob-match-census
   "Entry point: Probabilistically match some sample census records"
   ; clojure -X famtree.core/prob-match-census
-  [& args]
+  [& _args]
   (probab/match-census))

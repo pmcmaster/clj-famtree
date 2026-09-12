@@ -1,10 +1,10 @@
 (ns famtree.record-colls.raw-records
   "Unfiltered records, from the load functions, for each record type"
-  (:require [famtree.records :use [map->BirthRec
-                                   map->DeathRec
-                                   map->CensusRec
-                                   map->MarriageRec]]
-            [famtree.load :as load]))
+  (:require [famtree.load :as load]
+            [famtree.records :refer [map->BirthRec
+                                    map->DeathRec
+                                    map->CensusRec
+                                    map->MarriageRec]]))
 
 (def births (map map->BirthRec (load/data-for-type "births")))
 (def deaths (map map->DeathRec (load/data-for-type "deaths")))

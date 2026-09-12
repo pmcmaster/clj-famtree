@@ -25,7 +25,7 @@
   
   So far just shows one value representing probability of a randomly chosen
   forename being one which occurs multiple times in the data"
-  [& args]
+  [& _args]
  (let [colls (map var-get rec-colls/census-by-year-syms)
        name-occurs (map avg-name-occurrence colls)
        avg (/ (apply + name-occurs) (count colls))]

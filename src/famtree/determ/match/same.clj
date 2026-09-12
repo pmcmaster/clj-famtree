@@ -2,7 +2,6 @@
   "Implementation of functions to match a record against another for the
   same person (e.g., birth and death records for one person)."
   (:require [famtree.records]
-            [famtree.fields.names :as names]
             [famtree.fields.age-year :as age-year]
             [famtree.fields.basic :as fields]
             [famtree.fields.marriage :as marriage]
@@ -54,7 +53,7 @@
          (fields/first-word-from-field :spouse-forename this))
        other-gender))
   ;; No mmn data in a marriage rec; always match
-  (match-on-mm-name [this other-mm-name] true)
+  (match-on-mm-name [_this _other-mm-name] true)
 
   CensusRec
   (est-birth-year-range [this]
@@ -63,5 +62,5 @@
     (:surname this) other-surname)
   (match-on-gender [this other-gender] (= (:gender this) other-gender))
   ;; No mmn data in a marriage rec; always match
-  (match-on-mm-name [this other-mm-name] true))
+  (match-on-mm-name [_this _other-mm-name] true))
 

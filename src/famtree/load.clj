@@ -31,7 +31,7 @@
 (defn parse-int-or-nil
   "Parse value to an Integer if possible, otherwise return nil"
   [value]
-  (if (re-matches #"[0-9]+" value)
+  (when (re-matches #"[0-9]+" value)
     (Integer/parseInt value)))
 
 (defn is-numeric-field?

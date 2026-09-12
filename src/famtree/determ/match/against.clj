@@ -89,11 +89,11 @@
 
 (extend-protocol match-p/MatchForSamePerson
   DeathRec
-  (match-same-fn [this] match-against-death)
+  (match-same-fn [_this] match-against-death)
   BirthRec
-  (match-same-fn [this] match-against-birth)
+  (match-same-fn [_this] match-against-birth)
   MarriageRec
-  (match-same-fn [this] match-against-marriage)
+  (match-same-fn [_this] match-against-marriage)
   CensusRec
-  (match-same-fn [this] match-against-census))
+  (match-same-fn [_this] match-against-census))
 

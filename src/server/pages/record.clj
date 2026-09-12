@@ -16,7 +16,7 @@
   "Look-up record based on its hash. Returns the found record, or nil if no
    match"
   [rec-hash-str]
-  (if-let [rec-hash (Integer/parseInt rec-hash-str)]
+  (when-let [rec-hash (Integer/parseInt rec-hash-str)]
     (first (filter #(= rec-hash (hash %))
                    rec-colls/all-records))))
 
@@ -29,7 +29,7 @@
 
 (defn linked-records
   "List what records are already linked with this one."
-  [root-rec]
+  [_root-rec]
   (h/html
     [:h2 "Linked records"]
     [:p "None"]))
@@ -47,13 +47,13 @@
 (defn record-page
   "Page for a single record"
   [rec-hash-str]
-  (if-let [rec (record-from-hash rec-hash-str)]
+  (when-let [rec (record-from-hash rec-hash-str)]
     (h/html
       [:head [:title "Record detail"]
        (common/oat-header)
        (mapping-js/headers-small)]
       [:body (record-page-content rec-hash-str)
-       (if-let [location (places/loc-name-for-rec rec)]
+       (let [location (places/loc-name-for-rec rec)]
          (h/html [:p "Normalised location name: " location]))
        (linked-records rec)
        [:h2 "Scores against births"]
@@ -65,7 +65,7 @@
        [:h2 "Scores against marriages-spouse"]
        (match-scores rec rec-colls/marriages-spouse)
        [:div {:id "map"}]
-       (if-let [geoloc (location/geoloc-for-record rec)]
+       (when-let [geoloc (location/geoloc-for-record rec)]
          (h/html
            (mapping-js/script-small)
            (mapping-js/script-add-map-pins [geoloc])))])))

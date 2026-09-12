@@ -1,5 +1,5 @@
 (ns famtree.fields.age-year-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest is]]
             [famtree.fields.age-year :as age-year]))
 
 (deftest between-years?-test
@@ -16,8 +16,8 @@
   (is (age-year/ranges-overlap? '(16 65) [33 35]))
   (is (not (age-year/ranges-overlap? [3 13] [14 25])))
   (is (not (age-year/ranges-overlap? [22 13] [12 5])))
-  (is (nil? (age-year/ranges-overlap? [1 2] nil))
-  (is (nil? (age-year/ranges-overlap? nil [1 2])))))
+  (is (nil? (age-year/ranges-overlap? [1 2] nil)))
+  (is (nil? (age-year/ranges-overlap? nil [1 2]))))
 
 (deftest est-birth-range-from-age-test
   (is (= (age-year/est-birth-range-from-age 17 1997) [1979 1980]))

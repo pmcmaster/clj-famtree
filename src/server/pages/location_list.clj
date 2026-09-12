@@ -32,8 +32,9 @@
              [:a {:href (str "/location/" loc-hash)} loc]]))]]])))
 
 (defn location-for-year
-  "Show all location with activity for a given year, and a type of record"
-  [year-str record-types]
+  "Show all location with activity for a given year, and a type of record
+  Record type filtering is currently not implemented"
+  [year-str _record-types]
   (let [year (Integer/parseInt year-str)
         {all-recs-for-year :recs
          all-locs-for-year :locs} (location/locations-for-year year)]

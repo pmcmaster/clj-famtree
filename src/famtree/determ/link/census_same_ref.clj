@@ -1,10 +1,7 @@
 (ns famtree.determ.link.census-same-ref
-  (:require [famtree.printing :as p]
-            [famtree.fields.names :as names]
+  (:require [famtree.fields.names :as names]
             [famtree.record-colls.main-records :as rec-colls]
-            [clojure.set :as set]
-            [clojure.string :as str])
-  (:import [famtree.records CensusRec]))
+            [clojure.string :as str]))
 
 ;; Deterministic matching of census records with other census records
 ;; primarily based on the concept of a 'household' (people who are in the same
@@ -80,33 +77,33 @@
   to the next (typically 10 years later)"
   ;; TODO: Function is long. Should be broken up
   []
-  (let [by-year (grouped-by-year all-census-recs)]
-    (let [[prev-year-census this-year-census] (first (partition 2 1 by-year))
-          [prev-year prev-year-recs] prev-year-census
-          [this-year this-year-recs] this-year-census
-          year-diff (- this-year prev-year)
-          this-year-recs-right-age (filter
-                                     #(> (:age-at-census %) year-diff)
-                                     this-year-recs)
-          prev-year-by-household (group-by-household prev-year-recs)
-          this-year-by-household (group-by-household this-year-recs-right-age)]
+  (let [by-year (grouped-by-year all-census-recs)
+        [prev-year-census this-year-census] (first (partition 2 1 by-year))
+        [prev-year prev-year-recs] prev-year-census
+        [this-year this-year-recs] this-year-census
+        year-diff (- this-year prev-year)
+        this-year-recs-right-age (filter
+                                   #(> (:age-at-census %) year-diff)
+                                   this-year-recs)
+        prev-year-by-household (group-by-household prev-year-recs)
+        this-year-by-household (group-by-household this-year-recs-right-age)]
+    (println)
+    (println prev-year "to" this-year)
+    (println year-diff "years")
+    (doseq [[_rec-ref records] this-year-by-household]
       (println)
-      (println prev-year "to" this-year)
-      (println year-diff "years")
-      (doseq [[rec-ref records] this-year-by-household]
-        (println)
-        (println "Household of " (count records))
-        (let [fnames (into #{} (map names/first-forename-from-rec) records)
-              matches (filter (fn [[_other-ref other-recs]]
-                                (= (into #{}
-                                         (map names/first-forename-from-rec)
-                                         other-recs)
-                                   fnames))
-                              prev-year-by-household)]
-          (println "Match count:" (count matches))
-          (when (= (count matches) 1)
-            (println matches)
-            (println)
-            (println records)))))))
+      (println "Household of " (count records))
+      (let [fnames (into #{} (map names/first-forename-from-rec) records)
+            matches (filter (fn [[_other-ref other-recs]]
+                              (= (into #{}
+                                       (map names/first-forename-from-rec)
+                                       other-recs)
+                                 fnames))
+                            prev-year-by-household)]
+        (println "Match count:" (count matches))
+        (when (= (count matches) 1)
+          (println matches)
+          (println)
+          (println records))))))
 
 

@@ -3,8 +3,8 @@
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.middleware.resource :refer [wrap-resource]]
             [ring.util.response :as resp]
+            [compojure.core :refer [GET POST defroutes]]
             [compojure.route :as route]
-            [compojure.handler :as handler]
             [server.pages.main :as main-page]
             [server.pages.record :as record-page]
             [server.pages.record-collection :as rec-coll-page]
@@ -12,9 +12,8 @@
             [server.pages.link-records :as link-records]
             [server.pages.location-list :as loc-list-pages]
             [server.location-param :as loc-param]
-            [server.location :as location])
-  (:use compojure.core
-        [hiccup.middleware :only (wrap-base-url)]))
+            [server.location :as location]
+            [hiccup.middleware :refer (wrap-base-url)]))
 
 ;; Main server routes definition.
 
@@ -42,6 +41,6 @@
       (wrap-base-url)
       (wrap-reload)))
 
-(defn -main [& args]
+(defn -main [& _args]
   (run-jetty #'app {:port 3000}))
 
