@@ -30,24 +30,35 @@
        (mapping-js/headers)]
      [:body [:h1 found-loc]
       [:div {:id "map"}]
-      [:form
-       {:method "post"
-        :action "/update-location"}
-       (mapping-js/lat-lng-fields)
-       [:ul
-        (for [other-loc same-start-locs]
-          [:li [:input {:name (loc-param/param-name-for-loc other-loc)
-                        :type "checkbox"
-                        :checked false}
-                other-loc]
-           (when-let [coord (get @geolocate/location-info other-loc)]
-             (str " " coord))
-           " "
-           [:a {:href
-                (str "https://duckduckgo.com/?q=" first-word "&t=osx&ia=web")
-                :target "_blank"}
-            "Search"]])]
-       [:button {:type "submit"} "Update location"]]
+      [:div {:class "card"} [:form
+        {:method "post"
+         :action "/update-location"}
+
+        [:label {:data-field true}
+         "Latitude "
+         [:input {:id "lat" :name "lat"
+                  :type "text" :disabled true
+                  :style ""}]]
+        [:label {:data-field true}
+         "Longitude "
+         [:input {:id "lng" :name "lng"
+                  :type "text" :disabled true
+                  :style ""}]]
+        [:p "Associate lat/long with locations:"]
+        [:ul {:class "unstyled"}
+         (for [other-loc same-start-locs]
+           [:li {:class "unstyled"} [:input {:name (loc-param/param-name-for-loc other-loc)
+                                             :type "checkbox"
+                                             :checked false}
+                                     " " other-loc]
+            (when-let [coord (get @geolocate/location-info other-loc)]
+              (str " " coord))
+            " "
+            [:a {:href
+                 (str "https://duckduckgo.com/?q=" first-word "&t=osx&ia=web")
+                 :target "_blank"}
+             "Search"]])]
+        [:button {:type "submit"} "Update location"]]]
       [:p [:a {:href "/locations"} "All Locations"]]
       (mapping-js/script-default)
       (mapping-js/script-marker-on-click)])))

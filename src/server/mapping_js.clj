@@ -38,20 +38,6 @@
   []
   (headers-with-size 300))
 
-(defn lat-lng-fields
-  "Input fields for lat/long"
-  []
-  (h/html
-    [:input {:id "lat" :name "lat"}]
-    [:input {:id "lng" :name "lng"}]))
-
-(defn lat-lng-form
-  "Form elements for lat/long display and submission. Set on map click"
-  []
-  (h/html
-    [:form
-     (lat-lng-fields)]))
-
 (defn script-marker-on-click
   "Script snippet to add a pin on-click in on the map element"
   []
