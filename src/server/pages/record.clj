@@ -42,7 +42,9 @@
     (h/html
       (for [[weight other-rec] top-6]
         (h/html
-          [:p (format "%.3f" weight) " &mdash; " (rec-views/basic-row other-rec)])))))
+          [:p (format "%.3f" weight)
+           " &mdash; "
+           (rec-views/basic-row other-rec)])))))
 
 (defn record-page
   "Page for a single record"
@@ -53,20 +55,33 @@
        (common/oat-header)
        (mapping-js/headers-small)]
       [:body (record-page-content rec-hash-str)
-       (let [location (places/loc-name-for-rec rec)]
-         (h/html [:p "Normalised location name: " location]))
-       (linked-records rec)
-       [:h2 "Scores against births"]
-       (match-scores rec rec-colls/births)
-       [:h2 "Scores against deaths"]
-       (match-scores rec rec-colls/deaths)
-       [:h2 "Scores against marriages"]
-       (match-scores rec rec-colls/marriages)
-       [:h2 "Scores against marriages-spouse"]
-       (match-scores rec rec-colls/marriages-spouse)
-       [:div {:id "map"}]
-       (when-let [geoloc (location/geoloc-for-record rec)]
-         (h/html
-           (mapping-js/script-small)
-           (mapping-js/script-add-map-pins [geoloc])))])))
+       [:div {:class "card"
+              :style "float: left; clear: right"}
+        [:h2 "Location"]
+        (let [location (places/loc-name-for-rec rec)]
+          (h/html [:p "Normalised location name: " location]
+                  [:div {:id "map"}]))
+        (when-let [geoloc (location/geoloc-for-record rec)]
+          (h/html
+            (mapping-js/script-small)
+            (mapping-js/script-add-map-pins [geoloc]))) ]
+       [:div {:class "card"
+              :style "float: left"}
+        (linked-records rec)]
+       [:div {:class "card"
+              :style "float: left; clear: left"}
+        [:h2 "Scores against births"]
+        (match-scores rec rec-colls/births)]
+       [:div {:class "card"
+              :style "float: left"} [:h2 "Scores against deaths"]
+        (match-scores rec rec-colls/deaths)]
+       [:div {:class "card"
+              :style "float: left; clear: left"}
+        [:h2 "Scores against marriages"]
+        (match-scores rec rec-colls/marriages)]
+       [:div {:class "card"
+              :style "float: left; clear: right"}
+        [:h2 "Scores against marriages-spouse"]
+        (match-scores rec rec-colls/marriages-spouse)]
+       ])))
 

@@ -25,10 +25,12 @@
   [rec rec-type field-list]
   (h/html
     [:h1 rec-type " record for " (:surname rec) ", " (:forename rec)]
-    (for [field common-fields]
-      [:p (str field) ": " (str (field rec))])
-    (for [field field-list]
-      [:p (str field) ": " (str (field rec))])))
+    [:div {:class "card"
+           :style "float: left"}
+     (for [field common-fields]
+       [:p (str field) ": " (str (field rec))])
+     (for [field field-list]
+       [:p (str field) ": " (str (field rec))])]))
 
 (extend-protocol HTMLDisplay
   DeathRec
