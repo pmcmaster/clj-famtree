@@ -18,6 +18,14 @@
      [:head [:title "Locations"]
       (common/oat-header)]
      [:body 
+      [:nav {:aria-label "Breadcrumb"}
+       [:ol {:class "unstyled hstack"
+             :style "font-size: var(--text-7)"}
+        [:li
+         [:a {:href "/" :class "unstyled"} "Home"]]
+        [:li {:aria-hidden "true"} "/"]
+        [:li {:class "unstyled"}
+         [:strong "Locations"]]]]
       [:div {:class "card"}
        [:p (str (count all-locs)
                 " locations ("
@@ -32,23 +40,36 @@
              [:a {:href (str "/location/" loc-hash)} loc]]))]]])))
 
 (defn location-for-year
-  "Show all location with activity for a given year, and a type of record
-  Record type filtering is currently not implemented"
-  [year-str _record-types]
+  "Show all location with activity for a given year"
+  [year-str]
   (let [year (Integer/parseInt year-str)
         {all-recs-for-year :recs
          all-locs-for-year :locs} (location/locations-for-year year)]
     (h/html
       [:head [:title "Locations for " (str year)]
+       (common/oat-header)
        (mapping-js/headers)]
-      [:body [:h1 "Locations for " (str year)]
-       [:p
-        [:a {:href (str "/year/" (dec year))} "Prev"]
+      [:body 
+       [:nav {:aria-label "Breadcrumb"}
+        [:ol {:class "unstyled hstack"
+              :style "font-size: var(--text-7)"}
+         [:li [:a {:href "/" :class "unstyled"} "Home"]]
+         [:li {:aria-hidden "true"} "/"]
+         [:li {:class "unstyled"}
+          "Locations for " [:strong (str year)]]
+          ]]
+       [:p {:style "font-size: var(--text-7))"}
+        [:a {:href (str "/locations-by-year/" (dec year))}
+         "Prev (" (str (dec year) ")")]
         " | "
-        [:a {:href (str "/year/" (inc year))} "Next"]]
-       [:div {:id "map"}]
+        [:a {:href (str "/locations-by-year/" (inc year))}
+         "Next (" (str (inc year)) ")"]]
+       [:div {:id "map" :class "card"}]
        (mapping-js/script-default)
        (mapping-js/script-add-map-pins all-locs-for-year)
-       (for [each-rec all-recs-for-year]
-        (rec-views/basic-row-with-link each-rec))])))
+       [:p "Does not show census records; only birth/deaths/marriages"]
+       [:div {:class "card"}
+        [:h2 "Records for " (str year)]
+        (for [each-rec all-recs-for-year]
+          (rec-views/basic-row-with-link each-rec))]])))
 

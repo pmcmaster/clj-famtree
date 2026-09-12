@@ -20,5 +20,14 @@
   (h/html
     [:head [:title coll-name " records"]
      (common/oat-header)]
-    [:body (coll-list-content coll-name)]))
+    [:body
+      [:nav {:aria-label "Breadcrumb"}
+       [:ol {:class "unstyled hstack"
+             :style "font-size: var(--text-7)"}
+        [:li
+         [:a {:href "/" :class "unstyled"} "Home"]]
+        [:li {:aria-hidden "true"} "/"]
+        [:li {:class "unstyled"}
+         "All recs from collection " [:strong coll-name]]]]
+     (coll-list-content coll-name)]))
 

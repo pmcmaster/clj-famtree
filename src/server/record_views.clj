@@ -24,7 +24,15 @@
   "Page with detail on a record and its fields"
   [rec rec-type field-list]
   (h/html
-    [:h1 rec-type " record for " (:surname rec) ", " (:forename rec)]
+    [:nav {:aria-label "Breadcrumb"}
+     [:ol {:class "unstyled hstack"
+           :style "font-size: var(--text-7)"}
+      [:li
+       [:a {:href "/" :class "unstyled"} "Home"]]
+      [:li {:aria-hidden "true"} "/"]
+      [:li
+       [:a {:href "/locations" :class "unstyled"}
+        rec-type " record for " (:surname rec) ", " (:forename rec)]]]]
     [:div {:class "card"
            :style "float: left"}
      (for [field common-fields]

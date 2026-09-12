@@ -26,7 +26,8 @@
   (GET "/" [] (main-page/content))
   (GET "/location/:loc-hash" [loc-hash] (mark-loc-page/content loc-hash))
   (GET "/locations" [] (loc-list-pages/locations-page false))
-  (GET "/year/:year" [year] (loc-list-pages/location-for-year year :all))
+  (GET "/locations-by-year/:year" [year]
+       (loc-list-pages/location-for-year year))
   (GET "/random-location" [] (mark-loc-page/random-location-page))
   (POST "/update-location" req
         (let [updated-data (loc-param/data-for-update req)]

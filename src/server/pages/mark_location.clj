@@ -28,7 +28,16 @@
       [:head [:title "Location detail for " found-loc]
        (common/oat-header)
        (mapping-js/headers)]
-     [:body [:h1 found-loc]
+     [:body 
+      [:nav {:aria-label "Breadcrumb"}
+       [:ol {:class "unstyled hstack"
+             :style "font-size: var(--text-7)"}
+        [:li [:a {:href "/" :class "unstyled"} "Home"]]
+        [:li {:aria-hidden "true"} "/"]
+        [:li [:a {:href "/locations" :class "unstyled"} "Locations"]]
+        [:li {:aria-hidden "true"} "/"]
+        [:li {:class "unstyled"} [:strong found-loc]]]]
+
       [:div {:id "map"}]
       [:div {:class "card"} [:form
         {:method "post"
@@ -59,7 +68,7 @@
                  :target "_blank"}
              "Search"]])]
         [:button {:type "submit"} "Update location"]]]
-      [:p [:a {:href "/locations"} "All Locations"]]
+      
       (mapping-js/script-default)
       (mapping-js/script-marker-on-click)])))
 

@@ -44,10 +44,12 @@
   [number]
   (h/html (if (< number 0)
             [:span {:class "badge" :data-variant "danger"
-                    :style "margin-right: 0.5em"}
+                    :style "margin-left: 2em;
+                           margin-right: 0.5em"}
              (fmt-3dp number)]
             [:span {:class "badge" :data-variant "success"
-                    :style "margin-right: 0.5em"}
+                    :style "margin-left: 2em;
+                           margin-right: 0.5em"}
              (fmt-3dp number)])))
 
 (defn match-score-breakdown
