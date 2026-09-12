@@ -14,6 +14,8 @@
   (is (age-year/ranges-overlap? [1 2] '(2 2)))
   (is (age-year/ranges-overlap? '(30 30) [16 65]))
   (is (age-year/ranges-overlap? '(16 65) [33 35]))
+  (is (not (age-year/ranges-overlap? [3 13] [14 25])))
+  (is (not (age-year/ranges-overlap? [22 13] [12 5])))
   (is (nil? (age-year/ranges-overlap? [1 2] nil))
   (is (nil? (age-year/ranges-overlap? nil [1 2])))))
 

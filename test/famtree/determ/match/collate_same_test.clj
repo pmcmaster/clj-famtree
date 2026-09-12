@@ -1,6 +1,6 @@
-(ns famtree.match.collate-same-test
+(ns famtree.determ.match.collate-same-test
   (:require [clojure.test :refer :all]
-            [famtree.match.collate-same :refer :all]))
+            [famtree.determ.match.collate-same :refer :all]))
 
 (deftest update-and-link-test
   (let [start-set #{#{:a :b}

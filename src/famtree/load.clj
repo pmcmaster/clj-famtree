@@ -1,5 +1,6 @@
 (ns famtree.load
-  "Load data from files in 'data' directory into a map of appropriate shape"
+  "Load data from files in 'data' directory into a map of appropriate shape
+  Does not actually result in Records at this point"
   (:require [clojure.string :as str]
             [clojure.java.io :as io]
             [clojure.data.csv :as csv]))
@@ -19,7 +20,7 @@
 (defn field-name-to-keyword 
   "Convert `field-name` from header row from CSV file into keywords
   Has some specific replacements of long or punctuated names, or ones which
-  conflict with language terms"
+  conflict with language terms, which are substituted using non-std-fields"
   [field-name]
   (or (non-std-fields field-name)
       (-> field-name
@@ -67,7 +68,7 @@
     (map #(row-to-map % field-keys) data-rows)))
 
 (defn data-for-type
-  "The properly formated map of data for a given record-type"
+  "The properly formatted map of data for a given record-type"
   [record-type]
   (data-as-map (rows-for-record-type record-type)))
 

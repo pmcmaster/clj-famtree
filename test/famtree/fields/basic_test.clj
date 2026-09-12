@@ -1,4 +1,4 @@
-(ns famtree.fields.basic_test
+(ns famtree.fields.basic-test
   (:require [clojure.test :refer :all]
             [famtree.fields.basic :as f]))
 
@@ -6,6 +6,10 @@
   (is (nil? (f/no-data? 1)))
   (is (nil? (f/no-data? "abc")))
   (is (= (f/no-data? "---") "---")))
+
+(deftest first-word-from-field-test
+  (is (= (f/first-word-from-field :foo {:foo "Flip-flop"}) "Flip-flop")) 
+  (is (= (f/first-word-from-field :foo {:foo "Flip flop"}) "Flip")))
 
 (deftest =-and-has-data?-test
   (is (not (f/=-and-has-data? "--" 1)))
