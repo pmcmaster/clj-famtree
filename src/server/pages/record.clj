@@ -34,6 +34,29 @@
     [:h2 "Linked records"]
     [:p "None"]))
 
+(defn fmt-3dp
+  "Format `number` to 3 decimal places"
+  [number]
+  (format "%.3f" number))
+
+(defn colour-number
+  "Color styling for a number. Red if it's <0, green otherwise"
+  [number]
+  (h/html (if (< number 0)
+            [:span {:class "badge" :data-variant "danger"
+                    :style "margin-right: 0.5em"}
+             (fmt-3dp number)]
+            [:span {:class "badge" :data-variant "success"
+                    :style "margin-right: 0.5em"}
+             (fmt-3dp number)])))
+
+(defn match-score-breakdown
+  "Neat formatting of breakdown of a match score"
+  [match-scores]
+  (for [each-score match-scores]
+    (h/html [:li {:class "unstyled"}
+             (colour-number (:score each-score))
+             (:label each-score)])))
 
 (defn match-scores
   "Display match scores for this record against another record type"
@@ -43,13 +66,15 @@
     (h/html
       (for [[weight other-rec] top-6]
         (h/html
-          [:p (format "%.3f" weight)
-           " &mdash; "
+          [:p
+           [:span {:class "badge outline"
+                   :style "margin-right: 1em;
+                          font-weight: bold"}
+            (fmt-3dp weight)]
            (rec-views/basic-row other-rec)
-           [:br]
-           (for [field-score (prob-match/match-scores record other-rec)]
-             (h/html field-score
-               [:br] ))])))))
+           [:ul {:class "unstyled"}
+            (match-score-breakdown
+              (prob-match/match-scores record other-rec))]])))))
 
 (defn record-page
   "Page for a single record"

@@ -32,19 +32,38 @@
      (for [field field-list]
        [:p (str field) ": " (str (field rec))])]))
 
+;; Scope to remove duplication here. Leaving as-is for now while some of the
+;; output is adjusted often for records
 (extend-protocol HTMLDisplay
   DeathRec
-  (basic-row [this] (str/join basic-sep ["D" (:year this) (:forename this) (:surname this)]))
-  (detail-page [this] (field-detail-page this "Death" [:gender :mm-name :age-at-death]))
+  (basic-row [this] (str/join basic-sep ["D" (:year this)
+                                         (:forename this) (:surname this)
+                                         (:gender this)
+                                         (:mm-name this)
+                                         (:age-at-death this)
+                                         (:rd-name this)]))
+  (detail-page [this] (field-detail-page this "Death" [:gender
+                                                       :mm-name :age-at-death]))
   BirthRec
-  (basic-row [this] (str/join basic-sep ["B" (:year this) (:forename this) (:surname this)]))
+  (basic-row [this] (str/join basic-sep ["B" (:year this)
+                                         (:forename this) (:surname this)
+                                         (:gender this)
+                                         (:mm-name this)
+                                         (:rd-name this)]))
   (detail-page [this] (field-detail-page this "Birth" [:gender :mm-name]))
   CensusRec
-  (basic-row [this] (str/join basic-sep ["C" (:year this) (:forename this) (:surname this)]))
-  (detail-page [this] (field-detail-page this "Census" [:gender :county-city :age-at-census]))
+  (basic-row [this] (str/join basic-sep ["C" (:year this)
+                                         (:forename this) (:surname this)]))
+  (detail-page [this] (field-detail-page this "Census" [:gender :county-city
+                                                        :age-at-census]))
   MarriageRec
-  (basic-row [this] (str/join basic-sep ["M" (:year this) (:forename this) (:surname this)]))
-  (detail-page [this] (field-detail-page this "Marriage" [:spouse-forename :spouse-surname])))
+  (basic-row [this] (str/join basic-sep ["M" (:year this)
+                                         (:forename this) (:surname this)
+                                         (:spouse-forename this)
+                                         (:spouse-surname this)
+                                         (:rd-name this)]))
+  (detail-page [this] (field-detail-page this "Marriage" [:spouse-forename
+                                                          :spouse-surname])))
 
 (defn basic-row-with-link
   "Basic info for a row with a link to detail for the record"
