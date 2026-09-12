@@ -1,5 +1,6 @@
 (ns server.pages.link-records
   (:require [hiccup.core :as h]
+            [server.pages.common :as common]
             [server.pages.record :as record-page]
             [server.pages.record-collection :as rec-coll-page]))
 
@@ -11,7 +12,8 @@
   "Page to set up links between one record and another record type"
   [rec-hash-str rec-coll]
   (h/html
-    [:head [:title "Linking record with " rec-coll]]
+    [:head [:title "Linking record with " rec-coll]
+     (common/oat-header)]
     [:body
      (record-page/record-page-content rec-hash-str)
      [:p rec-coll]

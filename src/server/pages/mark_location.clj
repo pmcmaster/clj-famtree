@@ -4,6 +4,7 @@
     [clojure.string :as str]
     [famtree.places :as places]
     [famtree.geolocate :as geolocate]
+    [server.pages.common :as common]
     [server.location :as location]
     [server.location-param :as loc-param]
     [server.mapping-js :as mapping-js]))
@@ -25,6 +26,7 @@
                           (places/unique-locations))]
     (h/html
       [:head [:title "Location detail for " found-loc]
+       (common/oat-header)
        (mapping-js/headers)]
      [:body [:h1 found-loc]
       [:div {:id "map"}]

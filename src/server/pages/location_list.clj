@@ -2,6 +2,7 @@
   (:require [hiccup.core :as h]
             [famtree.places :as places]
             [famtree.geolocate :as geolocate]
+            [server.pages.common :as common]
             [server.location :as location]
             [server.mapping-js :as mapping-js]
             [server.record-views :as rec-views]))
@@ -14,19 +15,21 @@
   [show-all?]
   (let [all-locs (places/unique-locations)]
     (h/html
-     [:head [:title "Locations"]]
+     [:head [:title "Locations"]
+      (common/oat-header)]
      [:body 
-      [:p (str (count all-locs)
-               " locations ("
-               (count (location/locations-without-geo))
-               " with no location set)")]
-      [:ul
-       (for [loc all-locs
-             :when (or show-all?
-                       (not (geolocate/has-geoloc? loc)))]
-         (let [loc-hash (hash loc)]
-           [:li
-            [:a {:href (str "/location/" loc-hash)} loc]]))]])))
+      [:div {:class "card"}
+       [:p (str (count all-locs)
+                " locations ("
+                (count (location/locations-without-geo))
+                " with no location set)")]
+       [:ul
+        (for [loc all-locs
+              :when (or show-all?
+                        (not (geolocate/has-geoloc? loc)))]
+          (let [loc-hash (hash loc)]
+            [:li
+             [:a {:href (str "/location/" loc-hash)} loc]]))]]])))
 
 (defn location-for-year
   "Show all location with activity for a given year, and a type of record"

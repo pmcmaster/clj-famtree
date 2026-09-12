@@ -3,6 +3,7 @@
             [famtree.record-colls.main-records :as rec-colls]
             [server.record-views :as rec-views]
             [famtree.places :as places]
+            [server.pages.common :as common]
             [server.location :as location]
             [server.mapping-js :as mapping-js]
             [famtree.probab.match :as prob-match]))
@@ -13,7 +14,7 @@
 
 (defn record-from-hash
   "Look-up record based on its hash. Returns the found record, or nil if no
-  match"
+   match"
   [rec-hash-str]
   (if-let [rec-hash (Integer/parseInt rec-hash-str)]
     (first (filter #(= rec-hash (hash %))
@@ -49,6 +50,7 @@
   (if-let [rec (record-from-hash rec-hash-str)]
     (h/html
       [:head [:title "Record detail"]
+       (common/oat-header)
        (mapping-js/headers-small)]
       [:body (record-page-content rec-hash-str)
        (if-let [location (places/loc-name-for-rec rec)]

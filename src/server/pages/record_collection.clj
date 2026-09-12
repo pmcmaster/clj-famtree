@@ -1,5 +1,6 @@
 (ns server.pages.record-collection
   (:require [hiccup.core :as h]
+            [server.pages.common :as common]
             [server.record-views :as rec-views]))
 
 ;; Pages for basic display of a list of records
@@ -17,6 +18,7 @@
   "List all records on one page for a collection type"
   [coll-name]
   (h/html
-    [:head [:title coll-name " records"]]
+    [:head [:title coll-name " records"]
+     (common/oat-header)]
     [:body (coll-list-content coll-name)]))
 

@@ -1,6 +1,7 @@
 (ns server.main
   (:require [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.reload :refer [wrap-reload]]
+            [ring.middleware.resource :refer [wrap-resource]]
             [ring.util.response :as resp]
             [compojure.route :as route]
             [compojure.handler :as handler]
@@ -37,7 +38,7 @@
   (route/not-found "Page not found"))
 
 (def app
-  (-> (handler/site #'main-routes)
+  (-> (wrap-resource #'main-routes "public")
       (wrap-base-url)
       (wrap-reload)))
 
