@@ -1,5 +1,7 @@
 (ns famtree.probab.match
   (:require [famtree.probab.comp-forename :as comp-forename]
+            [famtree.probab.comp-gender :as comp-gender]
+            [famtree.probab.comp-location :as comp-location]
             [famtree.probab.felligi-sunter :as fel-sun]))
 
 ;; Match pairs of records probabilistically, or at least calculate a match
@@ -13,8 +15,8 @@
   (when passed two records to compare) then the weights relating to that
   function are used (later) to calculate a match score for that scenario"
   [comp-forename/fns-and-weights
-; ... other fields ...
-   ])
+   comp-gender/fns-and-weights
+   comp-location/fns-and-weights])
 
 (defn match-scores
   "Individual match scores for field matches defined in field-comparison-fns.
