@@ -1,7 +1,9 @@
 (ns server.main
-  (:require [ring.adapter.jetty :refer [run-jetty]]
+  (:require [clojure.tools.logging :as logging]
+            [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.middleware.resource :refer [wrap-resource]]
+            [ring.logger :refer [wrap-with-logger]]
             [ring.util.response :as resp]
             [compojure.core :refer [GET POST defroutes]]
             [compojure.route :as route]
@@ -18,7 +20,7 @@
 ;; Main server routes definition.
 
 ; Run with:
-; clojure -M -m server.main
+; clojure -M:server
 
 (defroutes main-routes
   (GET "/" [] (main-page/content))
@@ -38,9 +40,11 @@
 
 (def app
   (-> (wrap-resource #'main-routes "public")
+      (wrap-with-logger)
       (wrap-base-url)
       (wrap-reload)))
 
 (defn -main [& _args]
+  (logging/info "Started")
   (run-jetty #'app {:port 3000}))
 
