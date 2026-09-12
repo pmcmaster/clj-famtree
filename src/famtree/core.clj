@@ -2,7 +2,7 @@
   "Main entry point for project
   Runs the main matching process and triggers output of results"
   (:require [famtree.determ.core :as determ]
-            [famtree.probab.match :as probab]))
+            [famtree.probab.example :as probab-ex]))
 
 ;; 'determ' functions do a basic brute-force attempt at deterministic matching
 ;; of records. This does not give good results, and most of that code will
@@ -30,4 +30,4 @@
   "Entry point: Probabilistically match some sample census records"
   ; clojure -X famtree.core/prob-match-census
   [& _args]
-  (probab/match-census))
+  (probab-ex/match-census))
