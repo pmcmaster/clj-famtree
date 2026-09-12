@@ -34,6 +34,7 @@
     [:h2 "Linked records"]
     [:p "None"]))
 
+
 (defn match-scores
   "Display match scores for this record against another record type"
   [record other-rec-coll]
@@ -44,7 +45,11 @@
         (h/html
           [:p (format "%.3f" weight)
            " &mdash; "
-           (rec-views/basic-row other-rec)])))))
+           (rec-views/basic-row other-rec)
+           [:br]
+           (for [field-score (prob-match/match-scores record other-rec)]
+             (h/html field-score
+               [:br] ))])))))
 
 (defn record-page
   "Page for a single record"
