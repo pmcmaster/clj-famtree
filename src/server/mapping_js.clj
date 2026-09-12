@@ -2,10 +2,12 @@
   (:require [hiccup.core :as h]))
 
 ;; Produces <script> content for interacting with a map (as in map of the
-;; world) UI.
+;; world) UI. Includes associated css for different map sizes.
 
 ;; TODO: Avoid hardcoded JS strings; call out to include external JS template
 ;; files instead? Works for now but not very clean-feeling.
+
+;; Some of this has been converted to CLJS (in famtree/mapping_cljs).
 
 (defn map-css
   "CSS for the map element. Allows setting of size (square map)"
@@ -28,7 +30,7 @@
               :crossorigin ""}]
     [:style {:type "text/css"} (map-css px-size)]))
 
-(defn headers
+(defn headers-default
   "Headers for including a small map UI"
   []
   (headers-with-size 800))
@@ -54,18 +56,6 @@
      marker = L.marker(e.latlng).addTo(map);
      });"]))
 
-(defn script-position
-  "Script for defaults and interaction with map"
-  [lat, lng, zoom]
-  (h/html
-    [:script {:type "text/javascript" }
-     "var map = L.map('map').setView([" lat "," lng "]," zoom ");"
-     "L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',"
-     "{ maxZoom: 19,"
-     "attribution: '&copy; "
-     "<a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>'}"
-     ").addTo(map);"]))
-
 (defn script-add-map-pins
   "Adds pins to a map with the specified `locations`. Locations are expected
   to have a lat and lng value to determine the position for pin placement"
@@ -75,14 +65,4 @@
      (for [loc locations
            :when (and (:lat loc) (:lng loc))]
        (str "L.marker([" (:lat loc) "," (:lng loc) "]).addTo(map);\n"))]))
-
-(defn script-default
-  "Script for defaults and interaction with map"
-  []
-  (script-position 56.72, -4.1, 7))
-
-(defn script-small
-  "Script for defaults and interaction with a small map"
-  []
-  (script-position 57.5, -4.1, 5))
 

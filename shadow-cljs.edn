@@ -1,0 +1,37 @@
+;; shadow-cljs configuration
+
+;; Loosely following guidance from:
+;; https://blog.stephcrown.com/how-to-set-up-a-clojurescript-and-phoenix-project
+;; ...without the phoenix parts
+
+;; To build for dev (with reloading), run:
+;; npx shadow-cljs watch mapping
+
+;; Release:
+;; npx shadow-cljs release mapping
+
+{:source-paths ["src"]
+
+ :dependencies [[macchiato/hiccups "0.4.1"]]
+
+ :builds {:mapping
+          {:target :browser
+           :output-dir "resources/public/gen-static"
+           :asset-path "/"
+           :modules
+           {:mapping-main
+            {:entries [famtree.mapping-cljs.mapping-main]
+             :init-fn famtree.mapping-cljs.mapping-main/setup
+             }
+            :map-small
+            {:entries [famtree.mapping-cljs.map-small]
+             :depends-on #{:mapping-main}
+             :init-fn famtree.mapping-cljs.map-small/setup-map
+             }
+            :map-default
+            {:entries [famtree.mapping-cljs.map-default]
+             :depends-on #{:mapping-main}
+             :init-fn famtree.mapping-cljs.map-default/setup-map
+             }}
+           :devtools {:after-load
+                      famtree.mapping-cljs.mapping-main/reload!}}}}

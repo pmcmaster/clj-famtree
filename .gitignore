@@ -13,3 +13,6 @@ pom.xml.asc
 .hg/
 /data
 /.cpcache
+/node_modules
+/.shadow-cljs
+/resources/public/gen-static

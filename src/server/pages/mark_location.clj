@@ -27,7 +27,7 @@
     (h/html
       [:head [:title "Location detail for " found-loc]
        (common/oat-header)
-       (mapping-js/headers)]
+       (mapping-js/headers-default)]
      [:body 
       [:nav {:aria-label "Breadcrumb"}
        [:ol {:class "unstyled hstack"
@@ -68,8 +68,8 @@
                  :target "_blank"}
              "Search"]])]
         [:button {:type "submit"} "Update location"]]]
-      
-      (mapping-js/script-default)
+      [:script {:src "/gen-static/mapping-main.js"}]
+      [:script {:src "/gen-static/map-default.js"}]
       (mapping-js/script-marker-on-click)])))
 
 (defn random-location-page

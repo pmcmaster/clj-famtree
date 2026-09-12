@@ -48,7 +48,7 @@
     (h/html
       [:head [:title "Locations for " (str year)]
        (common/oat-header)
-       (mapping-js/headers)]
+       (mapping-js/headers-default)]
       [:body 
        [:nav {:aria-label "Breadcrumb"}
         [:ol {:class "unstyled hstack"
@@ -65,7 +65,8 @@
         [:a {:href (str "/locations-by-year/" (inc year))}
          "Next (" (str (inc year)) ")"]]
        [:div {:id "map" :class "card"}]
-       (mapping-js/script-default)
+       [:script {:src "/gen-static/mapping-main.js"}]
+       [:script {:src "/gen-static/map-default.js"}]
        (mapping-js/script-add-map-pins all-locs-for-year)
        [:p "Does not show census records; only birth/deaths/marriages"]
        [:div {:class "card"}

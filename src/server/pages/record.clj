@@ -95,7 +95,8 @@
                   [:div {:id "map"}]))
         (when-let [geoloc (location/geoloc-for-record rec)]
           (h/html
-            (mapping-js/script-small)
+            [:script {:src "/gen-static/mapping-main.js"}]
+            [:script {:src "/gen-static/map-small.js"}]
             (mapping-js/script-add-map-pins [geoloc]))) ]
        [:div {:class "card"
               :style "float: left"}
