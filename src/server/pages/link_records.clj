@@ -5,6 +5,8 @@
 
 ;; Pages for linking together records
 
+;; TODO: Implementation of functionality!!
+
 (defn set-link-page
   "Page to set up links between one record and another record type"
   [rec-hash-str rec-coll]

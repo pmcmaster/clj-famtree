@@ -7,6 +7,9 @@
 ;; Common functions for listing locations, or updating info relating to a
 ;; location.
 
+;; TODO: Some potential for confusion between 'location' 'place' and
+;; 'geolocate' modules. Consolidate these, or split-out more sensibly?
+
 (defn update-location
   "Update lat/long for one or more locations"
   [[{:keys [lat lng]} loc-names]]
@@ -29,8 +32,8 @@
   (let [all-recs-for-year (filter
                             #(= (:year %) year)
                             rec-colls/all-records-except-census)
-        all-locs (into {} places/loc-name-for-rec all-recs-for-year)
-        all-geolocs (map #(get @geolocate/location-info %) all-locs)]
+        all-locs (group-by places/loc-name-for-rec all-recs-for-year)
+        all-geolocs (map #(get @geolocate/location-info %) (keys all-locs))]
     {:locs all-geolocs
      :recs all-recs-for-year}))
 

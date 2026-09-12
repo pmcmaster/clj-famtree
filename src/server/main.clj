@@ -15,6 +15,8 @@
   (:use compojure.core
         [hiccup.middleware :only (wrap-base-url)]))
 
+;; Main server routes definition.
+
 ; Run with:
 ; clojure -M -m server.main
 

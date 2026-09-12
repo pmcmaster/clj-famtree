@@ -4,7 +4,7 @@
     (:require [famtree.record-colls.raw-records :as raw-colls]
               [famtree.fields.names :as names]))
 
-;; TODO: Map these to keywords at load-time
+;; TODO: Map these to keywords at load-time?
 (def female "F")
 (def male "M")
 

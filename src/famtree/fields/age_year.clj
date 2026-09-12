@@ -1,5 +1,7 @@
 (ns famtree.fields.age-year)
 
+;; Common utility functions for dealing with ages and years in records
+
 (defn between-years?
   "Is year between first and second elements of start-end-year (inclusive)
   start-end-year may be nil, in which case nil is returned"

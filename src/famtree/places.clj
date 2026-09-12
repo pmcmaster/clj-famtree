@@ -4,6 +4,9 @@
 ;; Functions for working with standardised place names for records
 ;; Does not include any positional (lat/long) handling here
 
+;; TODO: Distinction between this module and the 'geolocate' module is not very
+;; clear/useful
+
 (defn loc-name-for-rec
   "Standardised location name for a record"
   [rec]

@@ -3,7 +3,13 @@
            [famtree.records :as rec])
  (:import [famtree.records BirthRec DeathRec CensusRec]))
 
+;; Coded detail of situations where contradictory information is held about two
+;; supposedly-matching records. For example, if there is a census record for
+;; someone which is dated 25 years prior to their birth record.
+
 ;; TODO: Tests.
+;; TODO: Revisit this module to see what is still useful with probablistic
+;; matching approach
 
 (defn multiple-recs
   "Do multiple recs in `rec-coll` pass the filter `filter-fn`"

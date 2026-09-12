@@ -8,8 +8,8 @@
                         in a record")
   (match-on-surname [this other-forename year]
                     "At `year` does `this` record's :surname match
-                    `other-surname`")
-  (match-on-gender [this other-gender] "other-gender would be 'M' or 'F'")
+                    `other-surname`? (surnames can change with marraiges)")
+  (match-on-gender [this other-gender] "Matches on gender `other-gender`")
   (match-on-mm-name [this other-mm-name] "match on mother's maiden name"))
 
 (defprotocol MatchForSamePerson

@@ -11,6 +11,10 @@
   (:import [famtree.records
             BirthRec DeathRec MarriageRec CensusRec]))
 
+;; A lot of these are just straightforward = comparisons. Some, like marriage
+;; records, are more complicated as they do not have (e.g.) gender as part of 
+;; the record itself, and gender is then inferred from the first names
+
 (extend-protocol match-p/MatchSamePerson
   BirthRec
   (est-birth-year-range [this] [(:year this) (:year this)])

@@ -1,5 +1,5 @@
 (ns famtree.determ.match.core
-  "Core matching functions"
+  "Core matching utility functions"
   (:require [famtree.determ.match.protocols :as match-p]
             [famtree.determ.match.against]))
 
@@ -16,7 +16,10 @@
   "Match another type of record (in collection at `search-coll-ref`) against
   `source-record`. A match occurs when there is one (and only one) match.
   `source-coll` is required to check back in the opposite direction that there
-  is also only one matching record looking that way"
+  is also only one matching record looking that way; if Bob matches only
+  against record Sue and Sue matches only against Bob then it is a 'good match'
+  but if Bob matches against Sue whereas Sue matches against more records than
+  just Bob, then it is not considered to be a good match."
   [source-record [source-coll-ref search-coll-ref]]
   (let [source-coll (var-get source-coll-ref)
         search-coll (var-get search-coll-ref)

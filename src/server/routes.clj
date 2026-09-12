@@ -6,4 +6,5 @@
             [compojure.handler :as handler]
             [compojure.resoonse :as response]))
 
+;; TODO: Remove this module? Unused? Move stuff from server.main?
 ()

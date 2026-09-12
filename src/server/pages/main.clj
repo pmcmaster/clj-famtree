@@ -12,7 +12,6 @@
      [:script {:src "/htmx.min.js"}]]
     [:body
      [:h1 "FamTree Main Page"]
-     [:p [:a {:href "/reset"} "Reset Data"]]
      [:p [:a {:href "/locations"} "Locations without geo-data"]]
      [:p [:a {:href "/year/1855"} "By Year"] " (defaults to 1855)"]
      (for [rec-coll (sort-by str rec-colls/all-collection-refs)]

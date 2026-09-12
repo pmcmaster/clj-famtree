@@ -6,9 +6,13 @@
             [clojure.string :as str])
   (:import [famtree.records CensusRec]))
 
+;; Deterministic matching of census records with other census records
+;; primarily based on the concept of a 'household' (people who are in the same
+;; house at the time of a census)
 
 (defn print-by-generations
-  "Print out a household split into generations"
+  "Print out a household split into generations, based on the rather arbitrary
+  distinction of a 16 year gap between two people"
   ;; TODO: Could possibly be done more clearly with partition-by somehow?
   ([people-coll]
    (let [people-sorted (sort-by :age-at-census > people-coll)
@@ -45,6 +49,7 @@
   (into (sorted-map) (group-by :year records)))
 
 (defn rd-names-only
+  "Get only the rd-name fields from a set of records"
   [records]
   (into (sorted-set)
         (map (fn [r] (str/upper-case (:rd-name r))))
@@ -71,14 +76,18 @@
   (group-by :rec-ref records))
 
 (defn show-county-city
-  "Print out disappearing or new county/city entries"
+  "Print out disappearing or new county/city entries from one census year
+  to the next (typically 10 years later)"
+  ;; TODO: Function is long. Should be broken up
   []
   (let [by-year (grouped-by-year all-census-recs)]
     (let [[prev-year-census this-year-census] (first (partition 2 1 by-year))
           [prev-year prev-year-recs] prev-year-census
           [this-year this-year-recs] this-year-census
           year-diff (- this-year prev-year)
-          this-year-recs-right-age (filter #(> (:age-at-census %) year-diff) this-year-recs)
+          this-year-recs-right-age (filter
+                                     #(> (:age-at-census %) year-diff)
+                                     this-year-recs)
           prev-year-by-household (group-by-household prev-year-recs)
           this-year-by-household (group-by-household this-year-recs-right-age)]
       (println)
@@ -89,7 +98,9 @@
         (println "Household of " (count records))
         (let [fnames (into #{} (map names/first-forename-from-rec) records)
               matches (filter (fn [[_other-ref other-recs]]
-                                (= (into #{} (map names/first-forename-from-rec) other-recs)
+                                (= (into #{}
+                                         (map names/first-forename-from-rec)
+                                         other-recs)
                                    fnames))
                               prev-year-by-household)]
           (println "Match count:" (count matches))

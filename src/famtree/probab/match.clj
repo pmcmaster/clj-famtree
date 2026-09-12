@@ -2,6 +2,11 @@
   (:require [famtree.record-colls.main-records :as rec-colls]
             [famtree.printing :as p]))
 
+;; Match pairs of records probabilistically, or at least calculate a match
+;; score between two records. This approach generates more flexibility in
+;; matching vs the previous (determinstic) approach, and should also be easier
+;; to extend)
+
 (defn year-of-birth-from-census
   "Calculate approx. year of birth from census record"
   [c-rec]
@@ -41,6 +46,8 @@
 ;; Uses Felligi-Sunter method to match records.
 ;; Details well-explained in talk and linked resources at:
 ;; https://github.com/oakmac/record-linking-talk/tree/master
+;; And more about the method in particular, and the maths at:
+;; https://www.robinlinacre.com/probabilistic_linkage/
 
 (defn weight-for-match
   "Updated weight following a match"

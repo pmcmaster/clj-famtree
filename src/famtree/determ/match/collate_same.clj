@@ -1,6 +1,6 @@
 (ns famtree.determ.match.collate-same)
 
-;; Collage pairs of records into sets where the pairs share a common record.
+;; Collate pairs of records into sets where the pairs share a common record.
 ;; e.g., [[:a :b] [:b :c]] becomes [#{:a :b :c}]
 
 (defn find-subset-containing-either

@@ -1,6 +1,11 @@
 (ns famtree.utils
   (:require [famtree.record-colls.main-records :as rec-colls]))
 
+;; 'Utility' functions. Not sure what these have in common other than
+;; they don't have a clearer place to live.
+
+;; TODO: Move these elsewhere and remove this module?
+
 (defn avg-name-occurrence
   "Probability of a first name appearing multiple times
   in a set of records `rec-coll`"

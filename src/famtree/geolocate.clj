@@ -22,8 +22,9 @@
   (spit location-filename (pr-str data)))
 
 (defn add-lat-lng-to-locations
-  "Associate lat/lng with some locations
-  The same `lat-lng` is set for all of the places in `locations`"
+  "Associate lat/lng with some additional locations
+  The same `lat-lng` is set for all of the places in `locations` then this
+  is merged with the existing stored locations"
   [lat-lng locations]
   (swap! location-info
          (fn [existing]

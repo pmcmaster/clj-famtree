@@ -1,6 +1,6 @@
 (ns famtree.load
   "Load data from files in 'data' directory into a map of appropriate shape
-  Does not actually result in Records at this point"
+  Does not actually result in Records at this point, just maps"
   (:require [clojure.string :as str]
             [clojure.java.io :as io]
             [clojure.data.csv :as csv]))
@@ -31,7 +31,6 @@
 (defn parse-int-or-nil
   "Parse value to an Integer if possible, otherwise return nil"
   [value]
-  ;; NB: Does not currently throw an exception but may be nil
   (if (re-matches #"[0-9]+" value)
     (Integer/parseInt value)))
 

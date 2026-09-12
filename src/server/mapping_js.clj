@@ -2,7 +2,10 @@
   (:require [hiccup.core :as h]))
 
 ;; Produces <script> content for interacting with a map (as in map of the
-;; world) UI
+;; world) UI.
+
+;; TODO: Avoid hardcoded JS strings; call out to include external JS template
+;; files instead? Works for now but not very clean-feeling.
 
 (defn map-css
   "CSS for the map element. Allows setting of size (square map)"

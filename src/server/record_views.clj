@@ -5,6 +5,8 @@
   (:import [famtree.records
             BirthRec DeathRec MarriageRec CensusRec]))
 
+;; Basic display of records in HTML in some semi-helpful (though not pretty) way
+
 (defprotocol HTMLDisplay
   "Functions for printing records in HTML"
   (basic-row [this] "Basic record details in a row of text")

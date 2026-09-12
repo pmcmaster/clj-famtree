@@ -4,6 +4,14 @@
   (:require [famtree.determ.core :as determ]
             [famtree.probab.match :as probab]))
 
+;; 'determ' functions do a basic brute-force attempt at deterministic matching
+;; of records. This does not give good results, and most of that code will
+;; likely be removed eventually.
+
+;; The 'probab' functions do a probabalistic, weighted attempt at finding
+;; matches between records. This approach should give better results, and be
+;; more flexible for future development.
+
 (defn households
   "Entry point: Show determinstic linking of possible households"
   ; clojure -X famtree.core/households
@@ -11,8 +19,9 @@
   (determ/households))
 
 (defn link-same-and-parents
-  "Entry point: Determinstically link together records which relate to the same person
-  Show summary of contradiatory situations. Basic attempt at linking children to parents"
+  "Entry point: Determinstically link together records which relate to the same
+  person Show summary of contradiatory situations. Basic attempt at linking
+  children to parents in the 'dumbest' way possible"
   ; clojure -X famtree.core/link-same-and-parents
   [& args]
   (determ/link-same-and-parents))

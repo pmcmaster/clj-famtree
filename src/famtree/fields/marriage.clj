@@ -28,6 +28,7 @@
    (:spouse-surname marriage-rec)])
 
 (defn female-surname-from-marriage
+  "What is the surname of the female participant in a marriage"
   [marriage-rec]
   (let [person-gender (gender/infer-gender-from-forename-pair
                         (:forename marriage-rec)
@@ -52,7 +53,11 @@
 (defn possible-core-person
   "Is the primary person in this record never going to be a 'core name' person.
   Example would be a 'JONES', male, when the core surname is 'SMITH'.
-  They are going to be JONES both before and after marriage."
+  They are going to be JONES both before and after marriage, so will never be
+  a SMITH. Concept of 'core name' here relates to the fact that all of this
+  operates on a collection of records gathered for one surname only, though it
+  obviously includes people who marry into or out of that family. See more
+  info in famtree.fields.names/core-surnames"
   ([marriage-rec]
    (apply possible-core-person (names marriage-rec)))
   ([primary-forename

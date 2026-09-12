@@ -9,6 +9,8 @@
 
 ;; Basic display of info relation to a single record
 
+;; TODO: Implementation
+
 (defn record-from-hash
   "Look-up record based on its hash. Returns the found record, or nil if no
   match"

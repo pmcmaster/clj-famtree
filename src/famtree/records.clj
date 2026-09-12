@@ -1,7 +1,7 @@
 (ns famtree.records
   "Records to hold data for each record type.
   Should correspond to the header row in the relevant data files, taking into
-  account the mappings used for some fields in load")
+  account the mappings used for some fields in the `load` module")
 
 
 (defrecord BirthRec

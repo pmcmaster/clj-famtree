@@ -11,7 +11,8 @@
 
 ;; TODO: Split these out into lists of predicates.
 ;; This should allow some kind of 'explain match' (or lack of match)
-;; feature.
+;; feature. Or even better - almost all of these should be removed once
+;; the probabilistic matching has the same functionality
 
 (defn match-against-birth
   "Find records in other-rec-coll which could be matches against birth-rec"
