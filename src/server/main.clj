@@ -13,6 +13,7 @@
             [server.pages.mark-location :as mark-loc-page]
             [server.pages.link-records :as link-records]
             [server.pages.location-list :as loc-list-pages]
+            [server.pages.explain-weights :as explain-weights-page]
             [server.location-param :as loc-param]
             [server.location :as location]
             [hiccup.middleware :refer (wrap-base-url)]))
@@ -37,6 +38,7 @@
   (GET "/coll/:coll-name" [coll-name] (rec-coll-page/content coll-name))
   (GET "/set-link/:rec-hash/to/:coll-name" [rec-hash coll-name]
        (link-records/set-link-page rec-hash coll-name))
+  (GET "/explain-weights" [] (explain-weights-page/content))
   (route/not-found "Page not found"))
 
 (def app

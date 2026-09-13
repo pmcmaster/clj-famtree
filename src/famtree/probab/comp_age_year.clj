@@ -1,5 +1,7 @@
 (ns famtree.probab.comp-age-year)
 
+;; TODO: So-far not hooked into Fellini-Sunter matching
+
 (defn year-of-birth-from-census
   "Calculate approx. year of birth from census record"
   [c-rec]
