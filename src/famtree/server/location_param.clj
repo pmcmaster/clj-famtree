@@ -1,4 +1,4 @@
-(ns server.location-param
+(ns famtree.server.location-param
   (:require [famtree.places :as places]
             [clojure.string :as str]))
 

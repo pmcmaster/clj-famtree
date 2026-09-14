@@ -1,8 +1,8 @@
-(ns server.pages.link-records
+(ns famtree.server.pages.link-records
   (:require [hiccup.core :as h]
-            [server.pages.common :as common]
-            [server.pages.record :as record-page]
-            [server.pages.record-collection :as rec-coll-page]))
+            [famtree.server.pages.common :as common]
+            [famtree.server.pages.record :as record-page]
+            [famtree.server.pages.record-collection :as rec-coll-page]))
 
 ;; Pages for linking together records
 

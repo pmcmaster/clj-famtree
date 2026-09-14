@@ -1,4 +1,4 @@
-(ns server.main
+(ns famtree.server.main
   (:require [clojure.tools.logging :as logging]
             [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.reload :refer [wrap-reload]]
@@ -7,20 +7,20 @@
             [ring.util.response :as resp]
             [compojure.core :refer [GET POST defroutes]]
             [compojure.route :as route]
-            [server.pages.main :as main-page]
-            [server.pages.record :as record-page]
-            [server.pages.record-collection :as rec-coll-page]
-            [server.pages.mark-location :as mark-loc-page]
-            [server.pages.link-records :as link-records]
-            [server.pages.location-list :as loc-list-pages]
-            [server.pages.explain-weights :as explain-weights-page]
-            [server.location-param :as loc-param]
-            [server.location :as location]
+            [famtree.server.pages.main :as main-page]
+            [famtree.server.pages.record :as record-page]
+            [famtree.server.pages.record-collection :as rec-coll-page]
+            [famtree.server.pages.mark-location :as mark-loc-page]
+            [famtree.server.pages.link-records :as link-records]
+            [famtree.server.pages.location-list :as loc-list-pages]
+            [famtree.server.pages.explain-weights :as explain-weights-page]
+            [famtree.server.location-param :as loc-param]
+            [famtree.server.location :as location]
             [hiccup.middleware :refer (wrap-base-url)]))
 
 ;; Main server routes definition.
 
-; Run with:
+; Run with the 'server' alias:
 ; clojure -M:server
 
 (defroutes main-routes

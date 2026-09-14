@@ -1,7 +1,7 @@
-(ns server.pages.record-collection
+(ns famtree.server.pages.record-collection
   (:require [hiccup.core :as h]
-            [server.pages.common :as common]
-            [server.record-views :as rec-views]))
+            [famtree.server.pages.common :as common]
+            [famtree.server.record-views :as rec-views]))
 
 ;; Pages for basic display of a list of records
 

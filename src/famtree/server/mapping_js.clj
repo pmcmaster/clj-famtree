@@ -1,4 +1,4 @@
-(ns server.mapping-js
+(ns famtree.server.mapping-js
   (:require [hiccup.core :as h]))
 
 ;; Produces <script> content for interacting with a map (as in map of the

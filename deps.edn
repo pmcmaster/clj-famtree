@@ -28,7 +28,7 @@
 
  :aliases {
            :server {
-                    :main-opts ["-m" "server.main"]
+                    :main-opts ["-m" "famtree.server.main"]
                     :jvm-opts
                     ["-Dclojure.tools.logging.factory=clojure.tools.logging.impl/log4j2-factory"] }
            :test {

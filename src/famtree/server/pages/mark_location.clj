@@ -1,13 +1,13 @@
-(ns server.pages.mark-location
+(ns famtree.server.pages.mark-location
   (:require 
     [hiccup.core :as h]
     [clojure.string :as str]
     [famtree.places :as places]
     [famtree.geolocate :as geolocate]
-    [server.pages.common :as common]
-    [server.location :as location]
-    [server.location-param :as loc-param]
-    [server.mapping-js :as mapping-js]))
+    [famtree.server.pages.common :as common]
+    [famtree.server.location :as location]
+    [famtree.server.location-param :as loc-param]
+    [famtree.server.mapping-js :as mapping-js]))
 
 ;; Page content for setting or updating geolocation information for a location
 
@@ -56,13 +56,16 @@
         [:p "Associate lat/long with locations:"]
         [:ul {:class "unstyled"}
          (for [other-loc same-start-locs]
-           [:li {:class "unstyled"} [:input {:name (loc-param/param-name-for-loc other-loc)
-                                             :type "checkbox"
-                                             :checked false}
+           [:li {:class "unstyled"} [:input
+                                     {:name (loc-param/param-name-for-loc
+                                              other-loc)
+                                      :type "checkbox"
+                                      :checked false}
                                      " " other-loc]
             (when-let [coord (get @geolocate/location-info other-loc)]
               (str " " coord))
             " "
+            ;; Link to web search for the place
             [:a {:href
                  (str "https://duckduckgo.com/?q=" first-word "&t=osx&ia=web")
                  :target "_blank"}

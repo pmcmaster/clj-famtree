@@ -1,4 +1,4 @@
-(ns server.pages.common
+(ns famtree.server.pages.common
   (:require [hiccup.core :as h]))
 
 (defn oat-header

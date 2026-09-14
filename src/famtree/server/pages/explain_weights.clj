@@ -1,6 +1,6 @@
-(ns server.pages.explain-weights
+(ns famtree.server.pages.explain-weights
   (:require [hiccup.core :as h]
-            [server.pages.common :as common]
+            [famtree.server.pages.common :as common]
             [famtree.probab.comp-forename :as comp-forename]
             [famtree.probab.comp-gender :as comp-gender]
             [famtree.probab.comp-location :as comp-location]

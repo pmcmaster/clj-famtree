@@ -1,11 +1,11 @@
-(ns server.pages.record
+(ns famtree.server.pages.record
   (:require [hiccup.core :as h]
             [famtree.record-colls.main-records :as rec-colls]
-            [server.record-views :as rec-views]
+            [famtree.server.record-views :as rec-views]
             [famtree.places :as places]
-            [server.pages.common :as common]
-            [server.location :as location]
-            [server.mapping-js :as mapping-js]
+            [famtree.server.pages.common :as common]
+            [famtree.server.location :as location]
+            [famtree.server.mapping-js :as mapping-js]
             [famtree.probab.match :as prob-match]))
 
 ;; Basic display of info relation to a single record

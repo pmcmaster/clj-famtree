@@ -1,8 +1,8 @@
-(ns server.pages.main
+(ns famtree.server.pages.main
   (:require [hiccup.core :as h]
             [famtree.record-colls.main-records :as rec-colls]
             [clojure.string :as str]
-            [server.pages.common :as common]))
+            [famtree.server.pages.common :as common]))
 
 (defn content
   "Main landing page with links to other pages"

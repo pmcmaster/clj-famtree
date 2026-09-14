@@ -1,4 +1,4 @@
-(ns server.location
+(ns famtree.server.location
   (:require
     [famtree.record-colls.main-records :as rec-colls]
     [famtree.places :as places]

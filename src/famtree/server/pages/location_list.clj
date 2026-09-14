@@ -1,11 +1,11 @@
-(ns server.pages.location-list
+(ns famtree.server.pages.location-list
   (:require [hiccup.core :as h]
             [famtree.places :as places]
             [famtree.geolocate :as geolocate]
-            [server.pages.common :as common]
-            [server.location :as location]
-            [server.mapping-js :as mapping-js]
-            [server.record-views :as rec-views]))
+            [famtree.server.pages.common :as common]
+            [famtree.server.location :as location]
+            [famtree.server.mapping-js :as mapping-js]
+            [famtree.server.record-views :as rec-views]))
 
 ;; Pages which show multiple locations
 

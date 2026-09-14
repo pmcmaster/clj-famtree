@@ -1,4 +1,4 @@
-(ns server.record-views
+(ns famtree.server.record-views
   (:require [famtree.records]
             [hiccup.core :as h]
             [clojure.string :as str])
