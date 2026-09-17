@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "shadow-cljs": "^3.5.1"
+    "shadow-cljs": "^3.5.3"
   }
 }
