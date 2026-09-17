@@ -8,7 +8,7 @@
 ;; of records. This does not give good results, and most of that code will
 ;; likely be removed eventually.
 
-;; The 'probab' functions do a probabalistic, weighted attempt at finding
+;; The 'probab' functions do a probabilistic, weighted attempt at finding
 ;; matches between records. This approach should give better results, and be
 ;; more flexible for future development.
 
@@ -27,7 +27,9 @@
   (determ/link-same-and-parents))
 
 (defn prob-match-census
-  "Entry point: Probabilistically match some sample census records"
+  "Entry point: Probabilistically match some sample census records. This is a
+  proof-of-concept example for the probabilistic matching. The probabilistic
+  logic is used more comprehensivly in the server process."
   ; clojure -X famtree.core/prob-match-census
   [& _args]
   (probab-ex/match-census))

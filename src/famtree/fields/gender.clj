@@ -4,7 +4,7 @@
     (:require [famtree.record-colls.raw-records :as raw-colls]
               [famtree.fields.names :as names]))
 
-;; TODO: Map these to keywords at load-time?
+;; TODO: Map these to keywords in the records themselves at load-time?
 (def female "F")
 (def male "M")
 
@@ -53,7 +53,8 @@
 
 (defn infer-gender-from-forename-pair
   "Figure out the gender directly based on `forename`
-  or (in case of nil) on 'opposite' gender of `other-forename`"
+  or (in case of not being able to determine based on `forename` alone) on
+  'opposite' gender of `other-forename`"
   [forename other-forename]
   (if-let [gender (gender-for-name forename)]
     gender

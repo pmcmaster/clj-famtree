@@ -7,9 +7,11 @@
             [famtree.probab.felligi-sunter :refer [match-fn-name-to-short]]))
 
 ;; TODO Add more of a dynamic explanation of what the probabilities may
-;; represent (cooincidence, high/low cardinality etc.))
+;; represent (cooincidence, high/low cardinality etc.)
 
 (defn weight-explaination-for
+  "Returns a hiccup snippet with content explanaing the match weights for a
+  given set of comparison functions"
   [fns-and-weights section-title]
   (h/html [:div {:class "card"}
     [:h2 section-title]

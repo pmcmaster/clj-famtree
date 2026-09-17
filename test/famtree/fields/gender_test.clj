@@ -6,7 +6,7 @@
                                            gender-for-name
                                            infer-gender-from-forename-pair]]))
 
-;; TODO: Test assertions are tightly tied to the data set used.
+;; TODO: Test assertions are tightly tied to the data set I am using.
 ;; They should not be.
 
 (deftest first-names-by-gender-test

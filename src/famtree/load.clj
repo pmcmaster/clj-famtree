@@ -13,6 +13,9 @@
       (doall (csv/read-csv reader :separator \tab)))))
 
 (def non-std-fields
+  ;; These contain words with commonly-defined meanings in Clojure (like ref)
+  ;; collisions (ref) or punctuation which make them not ideal to use as
+  ;; keywords, so define some alternatives here
   {"Mother's Maiden Name" :mm-name
    "County / City" :county-city
    "Ref" :rec-ref})
@@ -58,8 +61,8 @@
 
 (defn data-as-map
   "Process the raw records for a record type into a map.
-  raw-data expected to have a header row which is used to generate keys used in
-  the output map"
+  `raw-data` is expected to have a header row which is used to generate keys
+  used in the output map"
   [raw-data]
   (let [header-row (first raw-data)
         data-rows (rest raw-data)

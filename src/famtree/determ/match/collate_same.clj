@@ -18,7 +18,7 @@
 
 (defn update-and-link
   "Add source-rec and dest-rec to the set of sets of existing records
-  They should both be added to the set which already contain one of the
+  They should both be added to the set which already contains one of the
   records"
   [set-of-record-sets [source-rec dest-rec]]
   (if-let [existing-set (find-subset-containing-either
@@ -26,7 +26,7 @@
                           set-of-record-sets)]
     (->> (conj existing-set source-rec dest-rec)
          (update-results-set set-of-record-sets existing-set)) 
-    ;; No existing record for either - add as new set
+    ;; else - No existing record for either - add as new set
     (conj set-of-record-sets (hash-set source-rec dest-rec))))
 
 (defn pairs-to-sets

@@ -20,7 +20,8 @@
       (assoc-new-match-backref ref-pair source-rec match-rec)))
 
 (defn match-record-into-results
-  "Matches single record and adds to matches-by-type, updates match-count"
+  "Matches single record and adds to matches-by-type, updates match-count.
+  Prints out (to stdout) progress as it finds matches"
   [[matches-by-type match-count] [ref-pair source-rec]]  
   ;; Check for existing match first
   (if-not (get-in matches-by-type [ref-pair source-rec])

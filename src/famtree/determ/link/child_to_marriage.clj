@@ -39,7 +39,7 @@
       (p/print-details-for-person-set child-recs))))
 
 (defn find-parents
-  "Try to find parents from a set of child records"
+  "Try to find parents marriage records from a set of child records"
   [child-rec-set]
   (let [child-mm-names (single-mm-name-from-set child-rec-set)]
     (doseq [child-mm-name child-mm-names]

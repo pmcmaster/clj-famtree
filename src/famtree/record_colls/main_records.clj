@@ -15,7 +15,8 @@
 
 (def marriages-spouse 
   "Records for marriages, focusing on the person originally recorded as
-  spouse-surname and spouse-forename. These fields are flipped around so that
+  spouse-surname and spouse-forename. These fields are flipped around (when
+  they are defined in raw-colls/marriages-spouse so that
   data is in the usual surname/forename fields"
   (->> (var-get #'raw-colls/marriages-spouse)
        (filter marriage/possible-core-person)))

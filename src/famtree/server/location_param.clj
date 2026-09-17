@@ -5,8 +5,9 @@
 ;; Functions for converting to/from hashes for locations
 ;; and locations as parameter names.
 
-;; Identifier which gets tagged on to the start of a location parameter
-(def loc-param-tag "loc")
+(def loc-param-tag
+  ;; Identifier which gets tagged on to the start of a location parameter
+  "loc")
 
 (defn is-loc-param?
   "Predicate tests if `param` is the shape of a location param"

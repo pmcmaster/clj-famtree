@@ -18,6 +18,8 @@
 
 (defn content
   "Page for editing the info with a named location"
+  ;; TODO: Split this out a bit, possibly by extracting the breadcrumb logic
+  ;; to somewhere it can be reused?
   [loc-hash-str]
   (let [found-loc (loc-param/location-name-from-hash loc-hash-str)
         first-word (first-word-of found-loc)

@@ -10,7 +10,7 @@
 
 ;; Basic display of info relation to a single record
 
-;; TODO: Implementation
+;; TODO: Implementation of showing linked records
 
 (defn record-from-hash
   "Look-up record based on its hash. Returns the found record, or nil if no

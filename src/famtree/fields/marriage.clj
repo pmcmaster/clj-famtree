@@ -6,7 +6,7 @@
 
 (def age-range
   "Range of ages when someone might get married.
-  Upper limit is somewhat arbitrary."
+  Upper limit is pretty arbitrary."
   [16 65])
 
 (defn surnames-before-after
@@ -29,6 +29,8 @@
 
 (defn female-surname-from-marriage
   "What is the surname of the female participant in a marriage"
+  ;; TODO: Needs to handle case of not being able to determine gender for
+  ;; either party in the marriage?
   [marriage-rec]
   (let [person-gender (gender/infer-gender-from-forename-pair
                         (:forename marriage-rec)
@@ -40,6 +42,9 @@
 (defn matches-surname-at-date
   "Does the data for this marriage (surnames and year) match up with the
   `event-year` and `event-surname`"
+  ;; TODO: If `event-year` is = to marriage-year then event may have occurred
+  ;; before OR after the marriage, so need to add logic to consider either
+  ;; surname
   [marriage-year [surname-before-mar surname-after-mar]
    event-year event-surname]
   (cond (< event-year marriage-year) (names/surnames-match

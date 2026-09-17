@@ -8,6 +8,7 @@
 
 (defn match-census
   "Match two sets of census records against each other probabilistically
+  The two census collections used here are just arbitrary choices
   Prints out the best (and worst) matches"
   []
   (p/print-record-summary rec-colls/all-collection-refs)
@@ -16,7 +17,8 @@
     (doseq [source-rec source-coll]
       (println)
       (println "Source:" source-rec)
-      (let [targets-with-weights (prob-match/match-against source-rec target-coll)]
+      (let [targets-with-weights
+            (prob-match/match-against source-rec target-coll)]
         (doseq [[weight rec] (take 6 targets-with-weights)]
           (println weight rec))
         (println "...")

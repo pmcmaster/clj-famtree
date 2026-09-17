@@ -42,12 +42,17 @@
   (route/not-found "Page not found"))
 
 (def app
-  (-> (wrap-resource #'main-routes "public")
-      (wrap-with-logger)
-      (wrap-base-url)
-      (wrap-reload)))
+  (->
+    ;; Serves static resources
+    (wrap-resource #'main-routes "public")
+    (wrap-with-logger)
+    (wrap-base-url)
+    ;; Dynamic reloading for development
+    (wrap-reload)))
 
-(defn -main [& _args]
+(defn -main
+  "Main server process, starts jetty server process"
+  [& _args]
   (logging/info "Started")
   (run-jetty #'app {:port 3000}))
 

@@ -15,7 +15,8 @@
 
 (defn compare-using-fn
   "Returns [compare-fn match-probs] if compare-fn successfully matches rec1
-  against rec2. Returns nil if the comparison fails"
+  against rec2.
+  Returns nil if the comparison fails"
   [rec1 rec2 [compare-fn match-probs]]
   (when (compare-fn rec1 rec2)
     [compare-fn match-probs]))
@@ -50,7 +51,10 @@
 ;   (Math/log (/ (- 1 match-prob) (- 1 unmatch-prob))))
 
 (defn match-score-for-field
-  "Match" ;; TODO: DOCSTRING
+  "Return a map of the label for the match function which succeeded, and the
+  match score that resulted from that. This is used independently of
+  calculating the overall match score for two records, and is for display of a
+  breakdown of the matching score for specific records"
   [rec1 rec2 fns-and-weights]
   (let [{:keys [label weights]} (first-match-from-fns-and-weights
                                   fns-and-weights rec1 rec2)

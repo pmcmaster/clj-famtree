@@ -6,6 +6,7 @@
 
 ;; Pages for linking together records
 
+;; TODONEXT
 ;; TODO: Implementation of functionality!!
 
 (defn set-link-page

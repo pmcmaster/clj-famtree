@@ -2,7 +2,7 @@
   (:require [clojure.test :refer [deftest is]]
             [famtree.fields.names :as n]))
 
-;; TODO: Assertions here are specific to current data used
+;; TODO: Assertions here are specific to data I am using
 ;; Tests should not depend on that data
 
 (deftest first-part-of-hyphenated-name-test

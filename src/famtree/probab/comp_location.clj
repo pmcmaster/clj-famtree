@@ -15,4 +15,5 @@
   "List of comparions to work through for matching on location, and the
   relevant weights to use in the case that each match fn succeeds."
   [[location-rd-name-exact-match? {:match-prob 0.5 :unmatch-prob 0.3}]
+   ;; No-match weights are just 1 - w of the corresponding exact match weights
    [location-no-match? {:match-prob 0.995 :unmatch-prob 1}]])

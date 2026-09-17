@@ -52,7 +52,7 @@
          (fields/first-word-from-field :forename this)
          (fields/first-word-from-field :spouse-forename this))
        other-gender))
-  ;; No mmn data in a marriage rec; always match
+  ;; No mother's maiden name (mmn) data in a marriage rec; always match
   (match-on-mm-name [_this _other-mm-name] true)
 
   CensusRec
@@ -61,6 +61,6 @@
   (match-on-surname [this other-surname _year]
     (:surname this) other-surname)
   (match-on-gender [this other-gender] (= (:gender this) other-gender))
-  ;; No mmn data in a marriage rec; always match
+  ;; No mother's maiden name (mmn) data in a marriage rec; always match
   (match-on-mm-name [_this _other-mm-name] true))
 

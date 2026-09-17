@@ -27,6 +27,8 @@
         matching-recs (source-to-new-match-fn source-record search-coll)
         single-matching-rec (if-1-only matching-recs)]
     (when single-matching-rec
+      ;; Found match in one direction, now check for single match in opposite
+      ;; direction
       (let [back-match-fn (match-p/match-same-fn single-matching-rec)
             matching-recs-reverse-direction (back-match-fn single-matching-rec
                                                            source-coll)]

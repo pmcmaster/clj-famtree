@@ -16,13 +16,14 @@
      [:div {:class "card"}
       [:p
        [:a {:href "/locations"} "Locations without geo-data"]
-       " &mdash; Locations (basically place names) which do not have a lat/long assigned
-       to them"]
+       " &mdash; Locations (basically place names) which do not have a
+       lat/long assigned to them"]
       [:p [:a {:href "/locations-by-year/1855"} "By Year"]
-       " &mdash; Shows records for a given year on a map. 1855 is the currently the
-       date for earliest available records"]
+       " &mdash; Shows records for a given year on a map. 1855 is the currently
+       the date for earliest available records"]
       [:p [:a {:href "/explain-weights"} "Explain weights"]
-       " &mdash; Break-down of the currently configured weights for matching records"]]
+       " &mdash; Break-down of the currently configured weights for
+       matching records"]]
      [:article {:class "card"}
       [:h2 "Record sets"]
       [:p "Lists of all records for each type. (Census records are split into

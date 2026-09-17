@@ -11,4 +11,5 @@
 
 (def fns-and-weights
   [[gender-exact-match? {:match-prob 0.995 :unmatch-prob 0.6}]
+   ;; No-match weights are just 1 - w of the corresponding exact match weights
    [gender-no-match? {:match-prob 0.005 :unmatch-prob 0.4}]])

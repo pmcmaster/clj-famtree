@@ -46,14 +46,20 @@
   (into (sorted-map) (group-by :year records)))
 
 (defn rd-names-only
-  "Get only the rd-name fields from a set of records"
+  "Get only the rd-name fields from a set of records, and normalise them all
+  to upper-case only"
   [records]
   (into (sorted-set)
         (map (fn [r] (str/upper-case (:rd-name r))))
         records))
 
 (defn show-households
-  "Print out records grouped by households, from census records"
+  "Print out records grouped by households, from census records. A household
+  is likely when two records occur on the same page, which will have the same
+  :rec-ref value. Flaws in this approach are two adjacent but separate
+  households could appear next to each other on the same page, and one
+  household could be split across two consecutive pages."
+  ;; TODO: Attempt to find households split across pages?
   []
   (doseq [[loc recs-for-loc] census-by-location]
     (println)

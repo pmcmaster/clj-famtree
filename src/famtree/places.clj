@@ -8,7 +8,9 @@
 ;; clear/useful
 
 (defn loc-name-for-rec
-  "Standardised location name for a record"
+  "Standardised location name for a record
+  If the record does not have a :county-city field, then 'NONE' is used in that
+  place instead"
   [rec]
   (str (:rd-name rec)
        " / "
