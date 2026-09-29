@@ -17,14 +17,14 @@ This project uses Clojure and [shadow-cljs](http://shadow-cljs.org). [clj-kondo]
 - Optionally: clj-kondo for linting (installed via `brew install borkdude/brew/clj-kondo`)
 
 ## Data
-Execution depends on there being some records data (in the form of `.csv` files) in the `/data` directory. It is not appropriate to share the actual data I am working with via a GitHub repo.
+Execution depends on there being some records data (in the form of `.csv` files) in the `data` directory. It is not appropriate to share the actual data I am working with via a GitHub repo.
 
 The code for sourcing the data for these records from the Scotland's People website is not included as part of this project.
 
-**Next steps here**: I'm working on a process to generate synthetic data which would simulate some families/people, and some patchy record-keeping, over a couple of hundred years. Some work-in-progress on this is in this (synthetic-data) branch, in [src/data_gen](https://github.com/pmcmaster/clj-famtree/tree/synthetic-data/src/famtree/data_gen).
+I created a separate process to generate synthetic data which simulates some families/people, over a couple of hundred years. Executing `clojure -X famtree.data-gen.core/generate` simulates a population of people and events such as births/deaths/marriages etc.
 
-### Producing synthetic data
-Executing `clojure -X famtree.data-gen.core/generate` simulates a population of people and events such as births/deaths/marriages etc. It **does not yet** produce CSV records related to these people. It will soon.
+> [!IMPORTANT]
+> This does not overwrite any existing files, so the `data` directory will need to be cleared of any previous data files before executing this. The empty `data` directory itself should exist.
 
 # Building
 To compile the CLJS files into JS it is necessary to run: `npx shadow-cljs compile mapping`. This provides the functionality for some small map views showing location data. During development `npx shadow-cljs watch mapping` can be used to allow dynamic refresh of these resources.
@@ -209,6 +209,6 @@ At the same time as improving my Clojure I was also working to pick up some othe
 - Manually setting up linking between records, and showing that on the web interface. **This is what I am actively developing at the moment**.
 - More test coverage.
 - Removal of old code.
-- I'd like to have more generative tests, and ideally have some generative process for sample data, both using likely using Spec. (There is some [previous exploratory work using spec in another branch](https://github.com/pmcmaster/clj-famtree/blob/spec/src/famtree/record_specs.clj), which I will resurrect at some point.) Work-in-progress on synthetic data generation is in the [synthetic-data branch](https://github.com/pmcmaster/clj-famtree/blob/synthetic-data/src/famtree/data_gen.clj).
+- I'd like to have more generative tests, and ideally have the generative process for sample data both using likely using Spec. (There is some [previous exploratory work using spec in another branch](https://github.com/pmcmaster/clj-famtree/blob/spec/src/famtree/record_specs.clj), which I will resurrect at some point.)
 - Graphical display of trees of linked records.
 - Address the several TODOs, mostly relating to minor clean-ups required in the code.

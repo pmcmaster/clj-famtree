@@ -1,7 +1,9 @@
 (ns famtree.data-gen.births
   (:require [famtree.data-gen.people :as people]
             [famtree.data-gen.names :as names]
-            [famtree.data-gen.synthetic-records-store :as store]))
+            [famtree.data-gen.synthetic-records-store :as store]
+            [clojure.data.csv :as csv]
+            [clojure.java.io :as io]))
 
 ; Simulate births of people. They are born in the same location as their
 ; parent, and have age zero to begin with
@@ -46,4 +48,32 @@
                                population)
         new-children (filter some? new-children-or-nils)]
     (concat population new-children)))
+
+(def header-row
+  ["Surname" "Forename" "Mother's Maiden Name" "Gender"
+   "Year" "Ref" "RD Name"])
+
+(defn record-to-csv-order
+  "Convert the info stored for an event into the right shape for writing to 
+  CSV file for this record type."
+  [[year [_parent-record child-record]]]
+  ;; TODO Parent record is currently ignored. Hook up adding mother's maiden
+  ;; name (if that is stored for a mother) in some cases? "Real" data does not
+  ;; always have info for this field anyway."
+  [(:sname child-record) (:fname child-record) "-----" (:gender child-record)
+   year (:id child-record) (:location child-record)])
+
+(def filename "data/births.csv")
+
+(defn write-csv
+  "Write header row and data for death records"
+  []
+  (when (.exists (io/file filename))
+    (println "Exiting as " filename "file exists")
+    (System/exit 0))
+  (let [birth-records (get @store/record-store :birth)]
+    (with-open [writer (io/writer filename)]
+     (csv/write-csv writer [header-row] :separator \tab)
+     (let [records-for-csv (map record-to-csv-order birth-records)]
+       (csv/write-csv writer records-for-csv :separator \tab)))))
 

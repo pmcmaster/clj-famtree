@@ -7,6 +7,7 @@
 (def core-surname "SMITH")
 
 ; ...though there may be some unusual spelling variations
+; TODO: Currently these are unused
 (def alternate-core-surname-spellings
   #{"SMYTH" "SMYTHE" "SMIT"})
 
@@ -16,6 +17,8 @@
 (def female-names
   ["Susan" "Sheila" "Seonaid" "Selina" "Briony" "Sharon" "Sarah" "Suzanne"])
 
+
+; TODO: Add some random middle- or hyphenated names?
 (defn random-name
   "Random name for gender. Returns pair of first name and surname"
   [gender]

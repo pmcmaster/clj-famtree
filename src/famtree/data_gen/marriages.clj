@@ -1,7 +1,9 @@
-(ns famtree.data-gen.marriage
+(ns famtree.data-gen.marriages
   (:require [famtree.data-gen.people :as people]
             [famtree.data-gen.names :as names]
-            [famtree.data-gen.synthetic-records-store :as store]))
+            [famtree.data-gen.synthetic-records-store :as store]
+            [clojure.data.csv :as csv]
+            [clojure.java.io :as io]))
 
 ; Simulate marriage. The way the records I normally use are organised they only
 ; cover the 'core surname'. This means that when a woman with that core surname
@@ -67,4 +69,41 @@
     (->> population
         (remove (set women-getting-married))
         (concat new-women))))
+
+(def header-row
+  ["Surname" "Forename" "Spouse Surname" "Spouse Forename" "Year" "Ref"
+   "RD Name"])
+
+(defn record-to-csv-order-marriage-in
+  "Maps a pair of person records to the correct order for writing to CSV"
+  [[year [male-record female-record]]]
+  [(:sname male-record) (:fname male-record)
+   (:sname female-record) (:fname female-record)
+   year (:id male-record) (:location male-record)])
+
+(defn record-to-csv-order-marriage-out
+  "Maps a single person record to the correct order for writing to CSV"
+  [[year [single-record]]]
+  [(:sname single-record) (:fname single-record)
+   "Someone" "Else"
+   year (:id single-record) (:location single-record)])
+
+(def filename "data/marriages.csv")
+
+(defn write-csv
+  "Write header row and data for death records"
+  []
+  (when (.exists (io/file filename))
+    (println "Exiting as" filename "file exists")
+    (System/exit 0))
+  (let [marriage-in-records (get @store/record-store :marriage-in)
+        marriage-out-records (get @store/record-store :marriage-out)]
+    (with-open [writer (io/writer filename)]
+     (csv/write-csv writer [header-row] :separator \tab)
+     (let [in-records-for-csv (map record-to-csv-order-marriage-in
+                                   marriage-in-records)
+           out-records-for-csv (map record-to-csv-order-marriage-out
+                                    marriage-out-records)]
+       (csv/write-csv writer in-records-for-csv :separator \tab)
+       (csv/write-csv writer out-records-for-csv :separator \tab)))))
 

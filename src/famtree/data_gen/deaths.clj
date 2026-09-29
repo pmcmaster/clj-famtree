@@ -1,5 +1,7 @@
 (ns famtree.data-gen.deaths
-  (:require [famtree.data-gen.synthetic-records-store :as store]))
+  (:require [famtree.data-gen.synthetic-records-store :as store]
+            [clojure.data.csv :as csv]
+            [clojure.java.io :as io]))
 
 ; Simulate people dying. Values used are quite sensitive in relation to those
 ; use for birth rates. If one is changed, likely need to change the other to
@@ -25,3 +27,27 @@
        true)
     population))
 
+(def header-row
+  ["Surname" "Forename" "Age at death" "Mother's Maiden Name" "Gender"
+   "Year" "Ref" "RD Name"])
+
+(defn record-to-csv-order
+  "Convert the info stored for an event into the right shape for writing to 
+  CSV file for this record type."
+  [[year record]]
+  [(:sname record) (:fname record) (:age record) "-----" (:gender record) year
+   (:id record) (:location record)])
+
+(def filename "data/deaths.csv")
+
+(defn write-csv
+  "Write header row and data for death records"
+  []
+  (when (.exists (io/file filename))
+    (println "Exiting as" filename "file exists")
+    (System/exit 0))
+  (let [death-records (get @store/record-store :death)]
+    (with-open [writer (io/writer filename)]
+     (csv/write-csv writer [header-row] :separator \tab)
+     (let [records-for-csv (map record-to-csv-order death-records)]
+       (csv/write-csv writer records-for-csv :separator \tab)))))
