@@ -4,11 +4,11 @@ A system to work with Scottish historical "people" records (births, deaths, marr
 
 # Project objectives
 - Develop my Clojure skills by building a larger project than the [small script-like project](https://github.com/pmcmaster/clj-cheesecal) I had previously implemented. (Wider objective is to demonstrate Clojure competence for potential employers.)
-- Start with some simple run-once processes and work up to something which holds state and uses interaction to build up links between records
-- Experiment with Clojure web development libraries such as *ring* and *compojure* to build some simple UI for the tool
+- Start with some simple run-once processes and work up to something which holds state and uses interaction to build up links between records.
+- Experiment with Clojure web development libraries such as *ring* and *compojure* to build some simple UI for the tool.
 - Possibly discover some hidden ancestors along the way. The aim of the project is to match up records, finding (for example) a birth record and a marriage record which likely involve the same person, and from there eventually be able to build of trees of related people.
 
-# Requirements
+# Project prerequisites
 This project uses Clojure and [shadow-cljs](http://shadow-cljs.org). [clj-kondo](https://github.com/clj-kondo/clj-kondo) is used for linting but is not required to build the project. (I am developing this on a Mac, so [Homebrew](https://brew.sh) is used to install all of the base dependencies, and is used in the example commands shown here.)
 - Clojure version 12.6.1673 is used (installed via``brew install clojure/tools/clojure``), running against openjdk (Temurin-27+35) (installed via `brew install --cask temurin`)
 - Required Clojure libraries are managed via a `deps.edn` file; no specific dependencies on Leiningen, Boot etc.
@@ -26,10 +26,11 @@ The code for sourcing the data for these records from the Scotland's People webs
 # Building
 To compile the CLJS files into JS it is necessary to run: `npx shadow-cljs compile mapping`. This provides the functionality for some small map views showing location data. During development `npx shadow-cljs watch mapping` can be used to allow dynamic refresh of these resources.
 
-## Testing
+# Testing
 There are some (not as many as there should be) unit tests. These can be executed by running: `clojure -X:test`
 
 # Running
+There are several modes of execution. Some early versions used a kind of one-shot, determinstic matching which reads records, does some matching and dumps out results. Subsequently there is a mode to run as a server to navigate records interactively.
 
 ## Deterministic modes
 Two deterministic modes ('households' and 'child-parent relationships') do some fairly simple deterministic matching and dump out a long and not-very-comprehensible list of possible matches.
@@ -38,7 +39,7 @@ Two deterministic modes ('households' and 'child-parent relationships') do some 
 `clojure -X famtree.core/households`
 Tries to match together adjacent people in census registers and estimate which are part of the same household, and identify generations of families. This runs across several census years to try to find patterns where the same people are present in a household in sucessive census records.
 
-Example output below (rec-ref, rd-name and county-city fields removed to save space). This shows a likely household, tracked across the 1911 and 1921 census data. Everyone has aged 10 years in the intervening period, though it is possible to see the slight 'wobble' in the data with Mary and Marion, who have an 11-year age difference. This may be because the census is taken at a time of year prior to a birthday in 1911 and after a birthday in 1921, or simply because the data recorded is not very accurate. Can also see a new addition to the family in/around 1921: Elizabeth.
+Example output below (*:rec-ref*, *:rd-name* and *:county-city* fields removed to save space). This shows a likely household, tracked across the 1911 and 1921 census data. Everyone has aged 10 years in the intervening period, though it is possible to see the slight 'wobble' in the data with Mary and Marion, who have an 11-year age difference. This may be because the census is taken at a time of year prior to a birthday in 1911 and after a birthday in 1921, or simply because the data recorded is not very accurate. Can also see a new addition to the family in/around 1921: Elizabeth.
 ```
 ===== 1911 =====
 
@@ -79,7 +80,7 @@ Another example shows identifying potentially three generations of a family livi
 ```
 ### Child/parent relationships
 `clojure -X famtree.core/link-same-and-parents`
-Tries to match parents to their children. Small sample of output *:rec-ref* and *:surname* fields removed to save space.:
+Tries to match parents to their children. Small sample of output. *:rec-ref* and *:surname* fields removed to save space:
 ```
 Possible marriage
 #famtree.records.MarriageRec{:forename JOSEPH, :spouse-surname GREENHORN, :spouse-forename JANET, :year 1861, :rd-name Holytown}
@@ -108,23 +109,23 @@ Source: #famtree.records.CensusRec{:surname MCMESTER, :forename ELIZABETH, :year
 Here it appears that the 'best scoring' record is indeed likely indicating two records for the same person, but the small difference in the match score maybe suggests that the weightings for the fields used for matching need adjustment. I think that the match closeness here should result in a larger positive signal from the best-matching score for the best-matching record.
 
 ## Server process
-To start the web server process, execute: `clojure -M:server`. This will then be, accessible at `localhost:3000`
+To start the web server process, execute: `clojure -M:server`. This will then be accessible at `localhost:3000`
 
 ### Example screens
 
-Basic landing page with links to other sections
+Basic landing page with links to other sections.
 ![Basic landing page](doc_images/homepage.png)
 
-Record list page, listing records associated with a particular record set
-![Redord list page](doc_images/record_list.png)
+Record list page, listing records associated with a particular record set.
+![Record list page](doc_images/record_list.png)
 
 Record detail, showing scores against other possibly-related records and the selected one. Will eventually show records which have been manually linked.
 ![Record detail page](doc_images/record_detail.png)
 
-An explanation of the currently-configured weights (90.0%, 60.0% etc., shown below) being used for comparison
+An explanation of the currently-configured weights (90.0%, 60.0% etc., shown below) being used for comparison.
 ![Explain weights page](doc_images/explain_weights.png)
 
-A listing of places which do not have geolocation data assigned to them
+A listing of places which do not have geolocation data assigned to them.
 ![Places without geolocation data](doc_images/unassigned_locations.png)
 
 This page allows a geolocation to be associated with one or more placenames. It has a convenience link to search online for the placename, in case that is helpful in figuring out where it is. The data is persisted across runs.
@@ -192,9 +193,9 @@ At the same time as improving my Clojure I was also working to pick up some othe
 - Using vim for text editing instead of TextMate and Xcode which I'd been using previously. This one was quite a steep learning curve, I'd say more-so than Clojure itself, but has been very rewarding. (I've been working through two books: *Practical Vim* and *Modern Vim*, both by Drew Neil)
 
 # Limitations and caveats
-- The records themselves are incomplete by definition, so getting a 'full picture' of history from this process is unrealistic
+- The records themselves are incomplete by definition, so getting a 'full picture' of history from this process is unrealistic.
 - The project is also very much a work-in-progress. Although my Clojure proficiency has increased in the course of the project, the project itself has not realised the goals I envisaged for discovering relationships between records. This project is a hobby with no particular hard deadlines, so it has taken several turns around interesting Clojure learning directions which are not strictly related or necessary for the overall long-term project goal.
-- The code is more heavily-commented than I might normally. This is intended to reveal more of my thinking behind writing it that might be necessary/useful for normal 'here is some code for you to use' vs 'here is some code to show my understanding of Clojure'
+- The code is more heavily-commented than I might normally. This is intended to reveal more of my thinking behind writing it that might be necessary/useful for normal 'here is some code for you to use' vs 'here is some code to show my understanding of Clojure'.
 - Code clean-up; a lot of the 'deterministic'-mode code is code that I would have normally removed and replaced with probabilistic implemetations. I have left it here as a better indicator of the journey the project has taken overall.
 - Several TODOs remain in the code. Once the focus moves from 'learn Clojure better' to 'complete the project', it might be time to turn some AI friends loose on this, and see what happens.
 - The weightings used for matching in the probabilistic method need some tuning. This could be done by-hand, with a little thinking about it. Additionally there is scope to introduce some sort of 'find the best matching solution' reinforcement-based, automated training approach. Care would need to be taken here to avoid finding some solution which "matches" the greatest number of records, but does so in a way that makes no sense!
@@ -203,8 +204,8 @@ At the same time as improving my Clojure I was also working to pick up some othe
 
 # Next steps
 - Manually setting up linking between records, and showing that on the web interface. **This is what I am actively developing at the moment**.
-- Test coverage
-- Removal of old code
-- I'd like to have more generative tests, and ideally have some generative process for sample data, both using likely using Spec. (There is some [previous exploratory work using spec in another branch](https://github.com/pmcmaster/clj-famtree/blob/spec/src/famtree/record_specs.clj), which I will resurrect at some point.) Work-in-progress on synthetic data generation is in the [synthetic-data branch](https://github.com/pmcmaster/clj-famtree/blob/synthetic-data/src/famtree/data_gen.clj)
-- Graphical display of trees of linked records
-- Address the several TODOs, mostly relating to minor clean-ups required in the code
+- More test coverage.
+- Removal of old code.
+- I'd like to have more generative tests, and ideally have some generative process for sample data, both using likely using Spec. (There is some [previous exploratory work using spec in another branch](https://github.com/pmcmaster/clj-famtree/blob/spec/src/famtree/record_specs.clj), which I will resurrect at some point.) Work-in-progress on synthetic data generation is in the [synthetic-data branch](https://github.com/pmcmaster/clj-famtree/blob/synthetic-data/src/famtree/data_gen.clj).
+- Graphical display of trees of linked records.
+- Address the several TODOs, mostly relating to minor clean-ups required in the code.
