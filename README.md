@@ -24,7 +24,7 @@ The code for sourcing the data for these records from the Scotland's People webs
 **Next steps here**: I'm working on a process to generate synthetic data which would simulate some families/people, and some patchy record-keeping, over a couple of hundred years. Some work-in-progress on this is in this branch [synthetic-data branch](https://github.com/pmcmaster/clj-famtree/blob/synthetic-data/src/famtree/data_gen.clj).
 
 ### Producing synthetic data
-Executing `clojure -X famtree.data-gen/generate` simulates a population of people and events such as births/deaths/marriages etc. It **does not yet** produce CSV records related to these people. It will soon.
+Executing `clojure -X famtree.data-gen.core/generate` simulates a population of people and events such as births/deaths/marriages etc. It **does not yet** produce CSV records related to these people. It will soon.
 
 # Building
 To compile the CLJS files into JS it is necessary to run: `npx shadow-cljs compile mapping`. This provides the functionality for some small map views showing location data. During development `npx shadow-cljs watch mapping` can be used to allow dynamic refresh of these resources.
