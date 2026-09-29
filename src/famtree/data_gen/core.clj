@@ -5,10 +5,16 @@
             [famtree.data-gen.moving :refer [simulate-moving]]
             [famtree.data-gen.census :refer [simulate-census]]
             [famtree.data-gen.births :refer [simulate-births]]
-            [famtree.data-gen.people :as people]))
+            [famtree.data-gen.people :as people]
+            [famtree.data-gen.synthetic-records-store :as store]))
 
 ;; Generate some synthetic data which mirrors the structure of downloaded
 ;; records
+
+;; TODO: Will eventually write out data to the /data directory as .CSV files
+;; So far only simulates the people and stores the data during execution
+
+;; Run via: clojure -X famtree.data-gen.core/generate
 
 (defn print-population-stats
   "Print out population stats. Needs to return the population so that this
@@ -46,5 +52,6 @@
   "Generate a set of .CSV files for a pretend population of people"
   [& args]
   (let [population (initial-population 400 [])]
-    (simulate-time-from 1755 population)))
+    (simulate-time-from 1755 population))
+  (store/print-record-summary))
 

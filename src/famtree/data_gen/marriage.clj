@@ -1,6 +1,7 @@
 (ns famtree.data-gen.marriage
   (:require [famtree.data-gen.people :as people]
-            [famtree.data-gen.names :as names]))
+            [famtree.data-gen.names :as names]
+            [famtree.data-gen.synthetic-records-store :as store]))
 
 ; Simulate marriage. The way the records I normally use are organised they only
 ; cover the 'core surname'. This means that when a woman with that core surname
@@ -32,11 +33,11 @@
   "Generate a new person who `man-getting-married` is marrying. Unrealistically
   they will always have the same age as the man"
   [year man-getting-married]
-  ;; TODO: Generate marriage record HERE
   (let [spouse (new-woman (:sname man-getting-married)
                           ;; TODO: Generate a random maiden name here
                           (:location man-getting-married)
                           (:age man-getting-married))]
+    (store/add-record :marriage-in year [man-getting-married spouse])
     (println spouse "created by marriage")
     spouse))
 
@@ -44,9 +45,9 @@
   "When a woman 'leaves' the tracked population by losing her core surname
   through marriage"
   [year woman-getting-married]
-  ;; TODO: Generate marriate record HERE
   ;; TODO: Need to generate the man being married with a random name, for the
   ;; marriage record
+  (store/add-record :marriage-out year [woman-getting-married])
   (println woman-getting-married "leaves tracked population due to marriage"))
 
 (defn simulate-marriages

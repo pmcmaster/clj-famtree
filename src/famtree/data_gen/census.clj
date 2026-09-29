@@ -1,4 +1,5 @@
-(ns famtree.data-gen.census)
+(ns famtree.data-gen.census
+    (:require [famtree.data-gen.synthetic-records-store :as store]))
 
 ;; Years when a census was completed in Scotland, and for which
 ;; (as of 2026) the data is available)
@@ -10,7 +11,7 @@
   [year population]
   (when (contains? census-years year)
     (println year "is a census year")
-    ;; TODO: Generate census record for each person
-    )
+    (doseq [person population]
+      (store/add-record :census year person)))
   population)
 

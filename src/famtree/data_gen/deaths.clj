@@ -1,4 +1,5 @@
-(ns famtree.data-gen.deaths)
+(ns famtree.data-gen.deaths
+  (:require [famtree.data-gen.synthetic-records-store :as store]))
 
 ; Simulate people dying. Values used are quite sensitive in relation to those
 ; use for birth rates. If one is changed, likely need to change the other to
@@ -19,7 +20,7 @@
   (filter
     #(if (< (rand) (chance-of-death (:age %)))
        (do (println % "dies")
-           ;; TODO: Generate death record HERE
+           (store/add-record :death year %)
            false)
        true)
     population))

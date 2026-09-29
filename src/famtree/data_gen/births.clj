@@ -1,9 +1,12 @@
 (ns famtree.data-gen.births
   (:require [famtree.data-gen.people :as people]
-            [famtree.data-gen.names :as names]))
+            [famtree.data-gen.names :as names]
+            [famtree.data-gen.synthetic-records-store :as store]))
 
 ; Simulate births of people. They are born in the same location as their
-; parents, and have age zero to begin with
+; parent, and have age zero to begin with
+; There is only a relation to one parent, which may be a mother or father, not
+; to both
 
 (defn random-baby
   "Generate a person in a given `location` with a random age, with the
@@ -27,18 +30,19 @@
 
 (defn child-for
   "Generate a new child related to `person`"
-  [person]
+  [year person]
   (when (< (rand) (chance-of-child (:age person)))
     (println person "has a child")
-    ;; TODO Generate birth record HERE
-    (random-baby (:sname person) (:location person))))
+    (let [new-baby (random-baby (:sname person) (:location person))]
+      (store/add-record :birth year [person new-baby])
+     new-baby)))
 
 (defn simulate-births
   "Builds up a collection of new children and combines them with
   `population`"
   [year population]
   (let [new-children-or-nils (map
-                               #(child-for %)
+                               #(child-for year %)
                                population)
         new-children (filter some? new-children-or-nils)]
     (concat population new-children)))
