@@ -12,6 +12,7 @@ pom.xml.asc
 .hgignore
 .hg/
 /data
+/data_old
 /.cpcache
 /node_modules
 /.shadow-cljs
