@@ -21,7 +21,7 @@ Execution depends on there being some records data (in the form of `.csv` files)
 
 The code for sourcing the data for these records from the Scotland's People website is not included as part of this project.
 
-**Next steps here**: I'm working on a process to generate synthetic data which would simulate some families/people, and some patchy record-keeping, over a couple of hundred years. Some work-in-progress on this is in the [synthetic-data branch](https://github.com/pmcmaster/clj-famtree/blob/synthetic-data/src/famtree/data_gen.clj).
+**Next steps here**: I'm working on a process to generate synthetic data which would simulate some families/people, and some patchy record-keeping, over a couple of hundred years. Some work-in-progress on this is in the [synthetic-data branch](https://github.com/pmcmaster/clj-famtree/blob/synthetic-data/src/famtree/data_gen/core.clj).
 
 # Building
 To compile the CLJS files into JS it is necessary to run: `npx shadow-cljs compile mapping`. This provides the functionality for some small map views showing location data. During development `npx shadow-cljs watch mapping` can be used to allow dynamic refresh of these resources.
