@@ -96,6 +96,7 @@
   (when (.exists (io/file filename))
     (println "Exiting as" filename "file exists")
     (System/exit 0))
+  (io/make-parents filename)
   (let [marriage-in-records (get @store/record-store :marriage-in)
         marriage-out-records (get @store/record-store :marriage-out)]
     (with-open [writer (io/writer filename)]

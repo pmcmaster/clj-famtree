@@ -71,6 +71,7 @@
   (when (.exists (io/file filename))
     (println "Exiting as " filename "file exists")
     (System/exit 0))
+  (io/make-parents filename)
   (let [birth-records (get @store/record-store :birth)]
     (with-open [writer (io/writer filename)]
      (csv/write-csv writer [header-row] :separator \tab)

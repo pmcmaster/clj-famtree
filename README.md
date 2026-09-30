@@ -24,7 +24,7 @@ The code for sourcing the data for these records from the Scotland's People webs
 I created a separate process to generate synthetic data which simulates some families/people, over a couple of hundred years. Executing `clojure -X famtree.data-gen.core/generate` simulates a population of people and events such as births/deaths/marriages etc.
 
 > [!IMPORTANT]
-> This does not overwrite any existing files, so the `data` directory will need to be cleared of any previous data files before executing this. The empty `data` directory itself should exist.
+> This does not overwrite any existing files, so any existing `data` directory will need to be cleared of any previous data files before executing this.
 
 # Building
 To compile the CLJS files into JS it is necessary to run: `npx shadow-cljs compile mapping`. This provides the functionality for some small map views showing location data. During development `npx shadow-cljs watch mapping` can be used to allow dynamic refresh of these resources.
