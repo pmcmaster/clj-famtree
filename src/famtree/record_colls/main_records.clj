@@ -4,21 +4,21 @@
   (:require [famtree.record-colls.raw-records :as raw-colls]
             [famtree.fields.marriage :as marriage]))
 
-(def births (var-get #'raw-colls/births))
-(def deaths (var-get #'raw-colls/deaths))
+(def births (raw-colls/births))
+(def deaths (raw-colls/deaths))
 
 (def marriages
   "Records for marriages, focusing on the person recorded as surname and
   forename"
-  (->> (var-get #'raw-colls/marriages)
+  (->> (raw-colls/marriages)
        (filter marriage/possible-core-person)))
 
 (def marriages-spouse 
   "Records for marriages, focusing on the person originally recorded as
   spouse-surname and spouse-forename. These fields are flipped around (when
-  they are defined in raw-colls/marriages-spouse so that
-  data is in the usual surname/forename fields"
-  (->> (var-get #'raw-colls/marriages-spouse)
+  they are defined in raw-colls/marriages-spouse) so that data for the spouse
+  is in the usual surname/forename fields"
+  (->> (raw-colls/marriages-spouse)
        (filter marriage/possible-core-person)))
 
 (defn create-census-def-for-year
@@ -36,7 +36,7 @@
 (def census-by-year-syms
   "List of the dynamically-created record collections for census.
   One collection per-census-year."
-  (->> (var-get #'raw-colls/all-census)
+  (->> (raw-colls/all-census)
        (group-by :year)
        (mapv create-census-def-for-year)))
 

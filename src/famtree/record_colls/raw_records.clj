@@ -1,15 +1,35 @@
 (ns famtree.record-colls.raw-records
   "Unfiltered records, from the load functions, for each record type"
   (:require [famtree.load :as load]
+            [famtree.data-cache :as cache]
             [famtree.records :refer [map->BirthRec
                                     map->DeathRec
                                     map->CensusRec
                                     map->MarriageRec]]))
 
-(def births (map map->BirthRec (load/data-for-type "births")))
-(def deaths (map map->DeathRec (load/data-for-type "deaths")))
-(def all-census (map map->CensusRec (load/data-for-type "census")))
-(def marriages (map map->MarriageRec (load/data-for-type "marriages")))
+(defn births
+  "Records for births, either from cached values, or by loading from disk"
+  []
+  (cache/cached-or-load :births
+                        #(map map->BirthRec (load/data-for-type "births"))))
+
+(defn deaths
+  "Records fir deaths, either from cached values, or by loading from disk"
+  []
+  (cache/cached-or-load :deaths
+                  #(map map->DeathRec (load/data-for-type "deaths"))))
+
+(defn all-census
+  "All census records, either from cached calues, or by loading from disk"
+  []
+  (cache/cached-or-load :census
+                  #(map map->CensusRec (load/data-for-type "census"))))
+
+(defn marriages
+  "Marriage records, either from cached values, or by loading from disk"
+  []
+  (cache/cached-or-load :marriages
+                  #(map map->MarriageRec (load/data-for-type "marriages"))))
 
 (defn swap-spouse-partner
   "Switch the spouse- names to the other fields and vice-versa"
@@ -20,22 +40,19 @@
       (assoc :spouse-surname (:surname data-map))
       (assoc :spouse-forename (:forename data-map))))
 
-(def marriages-spouse (->> (load/data-for-type "marriages")
-                           (map swap-spouse-partner)
-                           (map map->MarriageRec)))
+(defn marriages-spouse
+  "Marriage records but with names swapped between main/spouse parties"
+  []
+  (cache/cached-or-load :marriages-spouse
+                  #(->> (load/data-for-type "marriages")
+                        (map swap-spouse-partner)
+                        (map map->MarriageRec))))
 
-(def all-collection-refs
-  "All references to each of the available collections"
-  (hash-set
-    #'births #'deaths #'marriages #'marriages-spouse #'all-census))
-
-(def all-records-except-marriage
+(defn all-records-except-marriage
   "One big collection with everything except marriage records.
   Used elsewhere to derive the 'core' surnames being looked at."
-  (->>
-    all-collection-refs
-    (filter #(not= #'marriages %))
-    (filter #(not= #'marriages-spouse %))
-    (map var-get)
-    (reduce concat)))
+  []
+  (concat (births)
+          (deaths)
+          (all-census)))
 

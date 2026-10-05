@@ -1,9 +1,10 @@
 (ns famtree.fields.names-test
   (:require [clojure.test :refer [deftest is]]
-            [famtree.fields.names :as n]))
+            [famtree.fields.names :as n]
+            [famtree.data-test-helper :as data-helper]))
 
-;; TODO: Assertions here are specific to data I am using
-;; Tests should not depend on that data
+;; Some of the tests here (those that use data-helper) read records from the
+;; data_sample directory, and depend on the data in those files
 
 (deftest first-part-of-hyphenated-name-test
   (is (= (n/first-part-of-hyphenated-name "SMITH-JENKINS")
@@ -16,22 +17,26 @@
   (is (nil? (n/first-part-of-hyphenated-name "-----"))))
 
 (deftest core-surnames-test
-  (is (= 10
-         (count n/core-surnames))))
+  (data-helper/do-with-test-data
+    (is (= 2
+           (count (n/core-surnames))))))
 
 (deftest first-forename-from-rec-test
   (is (= (n/first-forename-from-rec {:forename "Bob John"}) "Bob")))
 
 (deftest is-core-surname-test
-  (is (n/is-core-surname "MCMASTER")))
+  (data-helper/do-with-test-data
+    (is (n/is-core-surname "SMITH"))))
 
 (deftest surname-matches-surnames-test
-  (is (n/surname-matches-surnames "MCMASTER" ["MACMASTER" "DAVIS"]))
-  (is (not (n/surname-matches-surnames "MCMASTER" ["DAVIS"])))
-  (is (n/surname-matches-surnames "DAVIS" ["MACMASTER" "DAVIS"]))
-  (is (not (n/surname-matches-surnames "MCMASTER" []))))
+  (data-helper/do-with-test-data
+    (is (n/surname-matches-surnames "SMITH" ["SMYTH" "DAVIS"]))
+    (is (not (n/surname-matches-surnames "SMITH" ["DAVIS"])))
+    (is (n/surname-matches-surnames "DAVIS" ["MACMASTER" "DAVIS"]))
+    (is (not (n/surname-matches-surnames "SMITH" [])))))
 
 (deftest surnames-match-test
-  (is (n/surnames-match "MCMASTER" "MACMASTER"))
-  (is (not (n/surnames-match "SMITH" "JONES")))
-  (is (n/surnames-match "SMITH" "SMITH")))
+  (data-helper/do-with-test-data
+    (is (n/surnames-match "SMITH" "SMYTH"))
+    (is (not (n/surnames-match "SMITH" "JONES")))
+    (is (n/surnames-match "SMITH" "SMITH"))))

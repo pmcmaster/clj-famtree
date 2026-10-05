@@ -2,7 +2,8 @@
     "Functions that relate to deriving gender from records that don't directly
     have a gender field"
     (:require [famtree.record-colls.raw-records :as raw-colls]
-              [famtree.fields.names :as names]))
+              [famtree.fields.names :as names]
+              [famtree.data-cache :as cache]))
 
 ;; TODO: Map these to keywords in the records themselves at load-time?
 (def female "F")
@@ -13,35 +14,48 @@
   [rec-coll]
   (into #{} (map names/first-forename-from-rec) rec-coll))
 
-(def first-names-by-gender
-  "Get first names from all available records (except marriage) split out by
-  gender. Marriage records are not used as they do not have gender data"
-  (->> raw-colls/all-records-except-marriage
+(defn first-names-by-gender-from-records
+  "Get first names for all available records (except marriate) split out by
+  gender. Marriage records are not used as they do not have gender data. This
+  is calculated on invocation from all available records, and is intended to be
+  cached (see first-names-by-gender)"
+  []
+  (->> (raw-colls/all-records-except-marriage)
        (group-by #(:gender %))
        (into {} (map (fn [[gender recs-for-gender]]
                        [gender (first-forenames-from recs-for-gender)])))))
 
-(def male-forenames
-  "Forenames which are only found in male records"
-  (get first-names-by-gender male #{}))
+(defn first-names-by-gender
+  "Get first names from all available records (except marriage) split out by
+  gender. Marriage records are not used as they do not have gender data"
+  []
+  (cache/cached-or-load
+    :first-names-by-gender
+    first-names-by-gender-from-records))
 
-(def female-forenames
+(defn male-forenames
+  "Forenames which are only found in male records"
+  []
+  (get (first-names-by-gender) male #{}))
+
+(defn female-forenames
   "Forenames which are only found in female records"
-  (get first-names-by-gender female #{}))
+  []
+  (get (first-names-by-gender) female #{}))
 
 (defn female-forename?
   "Is `forename` a female name?
   True if it is a female name and not also a male name"
   [forename]
-  (and (female-forenames forename)
-       (not (male-forenames forename))))
+  (and ((female-forenames) forename)
+       (not ((male-forenames) forename))))
 
 (defn male-forename?
   "Is `forename` a male name?
   True if it is a male name and also not a female name"
   [forename]
-  (and (male-forenames forename)
-       (not (female-forenames forename))))
+  (and ((male-forenames) forename)
+       (not ((female-forenames) forename))))
 
 (defn gender-for-name
   "Returns a gender for a `forename`

@@ -1,16 +1,25 @@
 (ns famtree.determ.match.against-test
-  (:require [clojure.test :refer [deftest is]]
+  (:require [clojure.test :refer [deftest is testing]]
             [famtree.determ.match.protocols :as match-p]
             [famtree.determ.match.against]
             [famtree.fields.names]
+            [famtree.fields.gender]
             [famtree.records :refer [->BirthRec
                                      ->DeathRec
                                      ;; ->CensusRec
-                                     ->MarriageRec]]))
+                                     ->MarriageRec]]
+            ))
 
-(def core-surnames-mock
+(defn core-surnames-mock
   "Use only this as the 'core surname' for testing"
+  []
   #{"SMITH"})
+
+(defn forenames-mock
+  "Need to have a mock set of forenames by gender"
+  []
+  {"M" #{"ALAN"}
+   "F" #{"ELIZABETH"}})
 
 ; (defrecord BirthRec [surname forename mm-name gender year rec-ref rd-name])
 (def birth-alan-smith
@@ -47,7 +56,8 @@
 (defn match-same-succeeds
   "Match two records against each other - they are expected to match"
   [source-rec other-rec]
-  (with-redefs [famtree.fields.names/core-surnames core-surnames-mock]
+  (with-redefs [famtree.fields.names/core-surnames core-surnames-mock
+                famtree.fields.gender/first-names-by-gender forenames-mock]
     (let [match-same-fn (match-p/match-same-fn source-rec)
           match-result (match-same-fn source-rec [other-rec])]
       (is (= 1 (count match-result)))
@@ -57,13 +67,15 @@
 (defn match-same-both-ways
   "Records are able to match against each other in both directions"
   [rec1 rec2]
-  (match-same-succeeds rec1 rec2)
-  (match-same-succeeds rec2 rec1))
+  (testing "Expecting two records to match"
+    (match-same-succeeds rec1 rec2)
+    (match-same-succeeds rec2 rec1)))
 
 (defn match-same-fails
   "Match two records against each other - they are expected to NOT match"
   [source-rec other-rec]
-  (with-redefs [famtree.fields.names/core-surnames core-surnames-mock]
+  (with-redefs [famtree.fields.names/core-surnames core-surnames-mock
+                famtree.fields.gender/first-names-by-gender forenames-mock]
     (let [match-same-fn (match-p/match-same-fn source-rec)
           match-result (match-same-fn source-rec [other-rec])]
       (is (empty? match-result)))))

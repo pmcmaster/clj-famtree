@@ -5,10 +5,12 @@
             [clojure.java.io :as io]
             [clojure.data.csv :as csv]))
 
+(def data-source-dir "data/")
+
 (defn rows-for-record-type 
   "Read the raw CSV from a file named for record-type"
   [record-type]
-  (let [path (str "data/" record-type ".csv")]
+  (let [path (str data-source-dir record-type ".csv")]
     (with-open [reader (io/reader path)]
       (doall (csv/read-csv reader :separator \tab)))))
 

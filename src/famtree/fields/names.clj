@@ -1,7 +1,8 @@
 (ns famtree.fields.names
   "Functions for dealing with names in records and names across all records"
   (:require [famtree.record-colls.raw-records :as raw-colls]
-            [famtree.fields.basic :as fields]))
+            [famtree.fields.basic :as fields]
+            [famtree.data-cache :as cache]))
 
 (defn first-part-of-hyphenated-name
   "Get the first part of a hyphenated or two-part name
@@ -15,19 +16,27 @@
   [rec]
   (fields/first-word-from-field :forename rec))
 
-(def core-surnames
+(defn core-surnames-from-records
+  "What are the core surnames, derived from the existing records"
+  []
+  (into #{}
+        (map #(-> % :surname first-part-of-hyphenated-name))
+        (raw-colls/all-records-except-marriage)))
+
+(defn core-surnames
   "Get a list of all surnames from records except marriage records.
   This is used to establish what names are 'core' names in the records.
   Marriage records are expected to include other names from one party in
   addition to one of the parties having a 'core' name."
-  (->>
-    raw-colls/all-records-except-marriage
-    (into #{} (map #(-> % :surname first-part-of-hyphenated-name)))))
+  []
+  (cache/cached-or-load
+    :core-surnames
+    core-surnames-from-records))
 
 (defn is-core-surname
   "Is `surname` one of the core names currently used"
   [surname]
-  (core-surnames surname))
+  ((core-surnames) surname))
 
 (defn surname-matches-surnames
   "Does `surname` match any of `surnames-coll`.

@@ -4,7 +4,7 @@
                                            female-forename?
                                            male-forename?
                                            gender-for-name
-                                           infer-gender-from-forename-pair]]))
+                                           infer-gender-from-forename-pair]])/
 
 ;; TODO: Test assertions are tightly tied to the data set I am using.
 ;; They should not be.
@@ -13,9 +13,9 @@
   (is (= #{"M", "F", "-----"}
          (set (keys first-names-by-gender))))
   (is (= 258
-         (count (get first-names-by-gender "M"))))
+         (count (get (first-names-by-gender) "M"))))
   (is (= 482
-         (count (get first-names-by-gender "F")))))
+         (count (get (first-names-by-gender) "F")))))
 
 (deftest female-forename?-test
   (is (female-forename? "ELIZABETH")))
