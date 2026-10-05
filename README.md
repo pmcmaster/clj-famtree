@@ -26,6 +26,9 @@ I created a separate process to generate synthetic data which simulates some fam
 > [!IMPORTANT]
 > This does not overwrite any existing files, so any existing `data` directory will need to be cleared of any previous data files before executing this.
 
+### Static data
+There is also some static (pre-generated) data, which is used for some unit tests, in the `data_sample` directory. This can be copied to the `data` directory instead of generating fresh data.
+
 # Building
 To compile the CLJS files into JS it is necessary to run: `npx shadow-cljs compile mapping`. This provides the functionality for some small map views showing location data. During development `npx shadow-cljs watch mapping` can be used to allow dynamic refresh of these resources.
 
